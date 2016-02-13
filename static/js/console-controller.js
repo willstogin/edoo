@@ -2,14 +2,16 @@ var container = $('#console');
 var controller = container.console({
   promptLabel: '> ',
   commandValidate:function(line){
-    if (line == "") return true;
+    if (line == "") return false;
     else return true;
   },
   commandHandle:function(line){
-      return [{msg:"=> [12,42]",
-               className:"jquery-console-message-value"},
-              {msg:":: [a]",
-               className:"jquery-console-message-type"}]
+      result = eval(line);
+      if (result == undefined)
+	  return [{msg:"", className:"jquery-console-message-value"}];
+      return [{msg:""+result,
+	       className:"jquery-console-message-value"
+	      }];
   },
   autofocus:true,
   animateScroll:true,
