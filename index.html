@@ -1,21 +1,140 @@
 
 <head>
+  <title>HACK THE WORLD</title>
+  <script src="static/js/jquery-2.2.0.min.js"></script>
+  <!--Custom resize plugin-->
+  <link rel="stylesheet" href="static/css/resize.css">
+
 	<link rel="stylesheet" href="static/css/bootstrap.min.css">
-  <script src="third_party_libs/babylon.2.3.js" ></script>
-  <script src="third_party_libs/Oimo.js" ></script>
-  <script src="xml_parser/parser.js"></script>
-  <!-- Include the objects -->
-  <script src="objects/block.js"></script>
-  <script src="objects/objects.js"></script>
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="static/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="static/css/console.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="static/js/bootstrap.min.js"></script>
+
+
+  <!--Plugin for lined texted area-->
+  <link rel="stylesheet" href="static/css/jquery-linedtextarea.css">
+  <script src="static/js/jquery-linedtextarea.js"></script>
+
+  <!--Plugins CSS-->
+  <link rel="stylesheet" href="third_party_libs/codemirror/codemirror.css">
+  <link rel="stylesheet" href="third_party_libs/codemirror/themes/base16-dark.css">
+  <style>
+    .fill {
+      min-height: 100%;
+      height: 100%;
+      min-width: 100%;
+      width: 100%;
+    }
+    .row {
+      min-height: 50%;
+      height: 50%;
+    }
+    .lined-text-area{
+      height:100%;
+      width: 100%;
+    }
+    #canvas {
+      height:100%;
+      width: 100%;
+    }
+    .col-md-12 {
+      height: 50%;
+      min-height: 50%;
+      padding-right:0;
+      padding-left:0;
+    }
+    .CodeMirror{
+      height: auto;
+    }
+    #container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    #renderCanvas{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #refresh-canvas{
+      height:5%;
+      width:10%;
+      position: absolute;
+      top: 95%;
+      left:90%;
+    }
+    #renderCanvas{
+      z-index: 10;
+    }
+  </style>
 </head>
 
 <body>
-	   <div class="col-md-12">
-        <textarea id="xml" rows="23" cols="50"></textarea>
-    	  <canvas id="renderCanvas"></canvas>
-    	  <script src="main.js"></script>
+	   <div class="fill">
+        <div id="left">
+          <div class="col-md-12">
+              <textarea id="xml" class="lined-text-area"><root>
+</root></textarea>
+          </div>
+          <div id="handle-horizontal-left"></div>
+          <div class="col-md-12" id="js-container">
+              <textarea id="javascript" class="lined-text-area">function onEventFired() {
+
+}</textarea>
+          </div>
+        </div>
+        <div id="handle-vertical"></div>
+        <div id="right">
+          <div class="col-md-12 container">
+               <canvas id="canvas"></canvas>
+               <button id="refresh-canvas" class="btn btn-primary" onclick="parseXmlTextArea();">Refresh</button>
+          </div>
+          <div id="handle-horizontal-right"></div>
+          <div class="col-md-12" id="console-container">
+              <div id="console"></textarea>
+          </div>
+        </div>
      </div>
-    <div>
-      <button id="refresh-canvas" onclick="parseXmlTextArea();">Refresh</button>
-    </div>
+
+     <script src="third_party_libs/babylon.2.3.js" ></script>
+     <script src="third_party_libs/Oimo.js" ></script>
+     <script src="third_party_libs/codemirror/codemirror.js"></script>
+     <script src="third_party_libs/codemirror/modes/xml.js"></script>
+     <script src="third_party_libs/codemirror/modes/javascript.js"></script>
+     <script src="static/js/resize.js"></script>
+     <script src="static/js/jquery.console.js"></script>
+     <script src="static/js/console-controller.js"></script>
+     <script src="static/js/main.js"></script>
+
+     <script src="xml_parser/parser.js"></script>
+     <!-- Include the objects -->
+     <script src="objects/block.js"></script>
+     <script src="objects/objects.js"></script>
+
+
+     <script>
+     //Setup CodeMirror
+     var xmlTextArea = document.getElementById('xml');
+     var myCodeMirror = CodeMirror.fromTextArea(xmlTextArea, {
+       lineNumbers: true,
+       value : '<root>\n</root>',
+       theme : 'base16-dark',
+       mode :'xml'
+     });
+
+     var javascriptTextArea = document.getElementById('javascript');
+     var myCodeMirror = CodeMirror.fromTextArea(javascriptTextArea, {
+       lineNumbers: true,
+       theme : 'base16-dark',
+       mode : 'javascript'
+     });
+
+     </script>
+
+
 </body>

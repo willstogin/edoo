@@ -1,0 +1,19 @@
+#left,#right{
+    float:left;
+    height:100%;
+    width:49.75%;
+}
+#handle-vertical{
+    background:#262626;
+    float:left;
+    height:100%;
+    width:8px;
+    cursor: col-resize;
+}
+#handle-horizontal-right,#handle-horizontal-left{
+    background:#262626;
+    float:left;
+    height:8px;
+    width:100%;
+    cursor: row-resize;
+}

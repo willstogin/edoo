@@ -7,7 +7,7 @@ var hv = $('#handle-vertical'),
     js = $('#javascript'),
     can = $('#canvas'),
     con = $('#console'),
-    w = $('body').width() - ($('body').width() * 0.005),
+    w = $('body').width() - $('#handle-vertical').width(),
     h = $('body').height() - ($('body').height() * 0.02);
 
 var isVerticalDragging = false;
@@ -50,3 +50,4 @@ $(document).mouseup(function(){
         //$('#console-container').css('top', intialY - e.pageY);
     }
 });
+
