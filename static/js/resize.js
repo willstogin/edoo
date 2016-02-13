@@ -3,17 +3,16 @@ var hv = $('#handle-vertical'),
     hhr = $('#handle-horizontal-right'),
     l = $('#left'),
     r = $('#right'),
-    xml = $('#xml'),
-    js = $('#javascript'),
-    can = $('#canvas'),
-    con = $('#console'),
+    xml = $('#xml-container'),
+    js = $('#js-container'),
+    can = $('#canvas-container'),
+    con = $('#console-container'),
     w = $('body').width() - $('#handle-vertical').width(),
-    h = $('body').height() - ($('body').height() * 0.02);
+    h = $('body').height() - $('#handle-horizontal-left').height();
 
 var isVerticalDragging = false;
 var isHorizontalLeftDragging = false;
 var isHorizontalRightDragging = false;
-var intialY = 0;
 
 hv.mousedown(function(e){
     isVerticalDragging = true;
@@ -40,14 +39,22 @@ $(document).mouseup(function(){
     if(isVerticalDragging){
         l.css('width', e.pageX);
         r.css('width', w - e.pageX);
+        engine.resize();
     } else if(isHorizontalLeftDragging) {
-        //xml.css('height', e.pageY);
-        //$('#js-container').css('top', (e.pageY - h) * -1);
-        //js.css('top', e.pageY * -1);
+        xml.css('height', e.pageY);
+        js.css('height', e.pageY + h);
     } else if(isHorizontalRightDragging) {
-        //can.css('height', e.pageY);
-        //con.css('height', h + e.pageY);
-        //$('#console-container').css('top', intialY - e.pageY);
+      can.css('height', e.pageY);
+      con.css('height', h - e.pageY);
+      engine.resize();
     }
 });
 
+$(document).ready(function(){
+  l.css('width', w/4);
+  r.css('width', w*(3/4));
+  $('.col-md-12').css('height', h/2);
+  can.css('height', h*(5/6));
+  con.css('height', h*(1/6));
+  engine.resize();
+});

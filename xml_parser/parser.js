@@ -14,6 +14,8 @@ function childNodes(node){
 }
 */
 
+objectsFromXml = [];
+
 function parseXml(txt) {
     // Note: The variable txt is supposed to only have one root node. So I wrap it in zzz.
     txt = "<zzz>"+txt+"</zzz>";
@@ -28,18 +30,20 @@ function parseXml(txt) {
 	xmlDoc.loadXML(txt);
     }
 
+    // Remove previous objects from xml
+    while (objectsFromXml.length > 0)
+	objectsFromXml.pop().dispose();
+
     // All the nodes that are roots.
     rootNodes = xmlDoc.children[0].children;
     for (var i=0; i<rootNodes.length; i++) {
-	createObjectForXmlNode(rootNodes[i]);
+	var o = createObjectForXmlNode(rootNodes[i]);
+	if (o != undefined)
+	    objectsFromXml.push(o);
     }
 }
 
 function parseXmlTextArea() {
-
-    var xmlTextArea = document.getElementById("xml");
-    var xml = xmlTextArea.value;
-
+    var xml = xmlCodeMirror.getValue();
     parseXml(xml);
-
 }
