@@ -31,14 +31,15 @@ function parseXml(txt) {
     }
 
     // Remove previous objects from xml
-    for (var i=0; i<objectsFromXml; i++) {
-	// TODO
-    }
+    while (objectsFromXml.length > 0)
+	objectsFromXml.pop().dispose();
 
     // All the nodes that are roots.
     rootNodes = xmlDoc.children[0].children;
     for (var i=0; i<rootNodes.length; i++) {
-	objectsFromXml.push(createObjectForXmlNode(rootNodes[i]));
+	var o = createObjectForXmlNode(rootNodes[i]);
+	if (o != undefined)
+	    objectsFromXml.push(o);
     }
 }
 

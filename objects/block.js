@@ -34,7 +34,7 @@ var Block = function(xml_node,parent) {
     self.position = new BABYLON.Vector3(x,y,z);
     var material = new BABYLON.StandardMaterial("",scene);
     material.diffuseColor = BABYLON.Color3(1,0,0);
-    self.material = material;
+//    self.material = material;
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
