@@ -14,6 +14,8 @@ function childNodes(node){
 }
 */
 
+objectsFromXml = [];
+
 function parseXml(txt) {
     // Note: The variable txt is supposed to only have one root node. So I wrap it in zzz.
     txt = "<zzz>"+txt+"</zzz>";
@@ -28,10 +30,15 @@ function parseXml(txt) {
 	xmlDoc.loadXML(txt);
     }
 
+    // Remove previous objects from xml
+    for (var i=0; i<objectsFromXml; i++) {
+	// TODO
+    }
+
     // All the nodes that are roots.
     rootNodes = xmlDoc.children[0].children;
     for (var i=0; i<rootNodes.length; i++) {
-	createObjectForXmlNode(rootNodes[i]);
+	objectsFromXml.push(createObjectForXmlNode(rootNodes[i]));
     }
 }
 
