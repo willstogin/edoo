@@ -31,20 +31,23 @@ var createScene = function () {
     camera.attachControl(canvas, false);
     
     // Set the light
-    var mainLight = new BABYLON.DirectionalLight("light_main", new BABYLON.Vector3(0, -1, 0), scene);
-    mainLight.intensity = .5;
-    var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(-1, 0, 0), scene);
+    var mainLight = new BABYLON.HemisphericLight("light_main", new BABYLON.Vector3(0, 1, 0), scene);
+    mainLight.intensity = .75;
+    mainLight.diffuse = new BABYLON.Color3(1,1,1);
+    mainLight.specular = new BABYLON.Color3(1,1,1);
+    mainLight.groundColor = new BABYLON.Color3(0,0,0);
+    var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, 1, 0), scene);
     light2.intensity = .25;
-        var light3 = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(1, 0, 0), scene);
-    light3.intensity = .25;
-        var light4 = new BABYLON.DirectionalLight("light4", new BABYLON.Vector3(0, 0, 1), scene);
-    light4.intensity = .25;
-        var light5 = new BABYLON.DirectionalLight("light5", new BABYLON.Vector3(0, 0, -1), scene);
-    light4.intensity = .25;
+//        var light3 = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(1, 0, 0), scene);
+//    light3.intensity = .25;
+//        var light4 = new BABYLON.DirectionalLight("light4", new BABYLON.Vector3(0, 0, 1), scene);
+//    light4.intensity = .25;
+//        var light5 = new BABYLON.DirectionalLight("light5", new BABYLON.Vector3(0, 0, -1), scene);
+//    light4.intensity = .25;
     
     
     // Set the shadows
-    var shadowGenerator = new BABYLON.ShadowGenerator(1024, mainLight);
+    var shadowGenerator = new BABYLON.ShadowGenerator(1024, light2);
     shadowGenerator.getShadowMap().renderList.push();
     shadowGenerator.bias = .01;
     shadowGenerator.useVarianceShadowMap = true;
