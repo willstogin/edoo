@@ -42,8 +42,7 @@ function parseXml(txt) {
     // All the nodes that are roots.
     rootNodes = childNodes(childNodes(xmlDoc)[0])
     for (var i=0; i<rootNodes.length; i++) {
-	//handleNode(rootNodes[i]);
-	// TODO: Do stuff with rootNodes[i] here. (ie. call a function)
+	createObjectForXmlNode(rootNodes[i]);
     }
 }
 
