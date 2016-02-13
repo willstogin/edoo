@@ -20,6 +20,11 @@ var createScene = function () {
     var light = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
     light.intensity = .5;
     
+    // Set the shadows
+    var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    shadowGenerator.getShadowMap().renderList.push();
+    shadowGenerator.bias = .01;
+    shadowGenerator.useVarianceShadowMap = true;
     
     // Physics
     scene.enablePhysics();
@@ -29,6 +34,7 @@ var createScene = function () {
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.75, restitution: .95 });
     ground.isPickable = true;    
+    ground.receiveShadows = true;
     
     // Add all the boxes
     
@@ -37,6 +43,7 @@ var createScene = function () {
     box1.position.z = 10;
     box1.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box1.setPhysicsState = true;
+    shadowGenerator.getShadowMap().renderList.push(box1);
     
     var box2 = BABYLON.Mesh.CreateBox('box2',2,scene);
     box2.position.y = 1;
@@ -44,6 +51,8 @@ var createScene = function () {
     box2.position.x = 2.1;
     box2.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box2.setPhysicsState = true;
+    shadowGenerator.getShadowMap().renderList.push(box2);
+    
     
     var box3 = BABYLON.Mesh.CreateBox('box3',2,scene);
     box3.position.y = 1;
@@ -51,6 +60,7 @@ var createScene = function () {
     box3.position.x = -2.1;
     box3.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box3.setPhysicsState = true;
+    shadowGenerator.getShadowMap().renderList.push(box3);
     
     
     var box4 = BABYLON.Mesh.CreateBox('box4',2,scene);
@@ -59,6 +69,7 @@ var createScene = function () {
     box4.position.x = -1.05;
     box4.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box4.setPhysicsState = true;
+    shadowGenerator.getShadowMap().renderList.push(box4);
     
     var box5 = BABYLON.Mesh.CreateBox('box5',2,scene);
     box5.position.y = 3;
@@ -66,6 +77,7 @@ var createScene = function () {
     box5.position.x = 1.05;
     box5.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box5.setPhysicsState = true;
+    shadowGenerator.getShadowMap().renderList.push(box5);
     
     var box6 = BABYLON.Mesh.CreateBox('box6',2,scene);
     box6.position.y = 5;
@@ -73,6 +85,7 @@ var createScene = function () {
     box6.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     box6.setPhysicsState = true;
     box6.isPickable = true;
+    shadowGenerator.getShadowMap().renderList.push(box6);
     
     
     scene.onPointerDown = function (evt, pickResult) {
@@ -86,6 +99,7 @@ var createScene = function () {
 //        sphere.isPickable = true;
         sphere.applyImpulse(new BABYLON.Vector3(0, 0, 100),
                             sphere.getAbsolutePosition());
+    shadowGenerator.getShadowMap().renderList.push(sphere);
             
     }
     
