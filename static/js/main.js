@@ -12,7 +12,7 @@ var createScene = function () {
     scene.clearColor = new BABYLON.Color3(0, 1, 0); // Background color
     
     // The box creation
-    var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
 
     // The sky creation
     var skyMat = new BABYLON.StandardMaterial("skyMat", scene);
@@ -64,8 +64,8 @@ var createScene = function () {
 // Ground texture
     var gMat = new BABYLON.StandardMaterial("gMat", scene);
     var gtexture = new BABYLON.Texture("assets/ground.jpg", scene);
-    gtexture.uScale = 40;
-    gtexture.vScale = 2;
+    gtexture.uScale = 20;
+    gtexture.vScale = 20;
     gMat.diffuseTexture = gtexture;    
     ground.material = gMat;
     
