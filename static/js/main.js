@@ -28,15 +28,7 @@ var createScene = function () {
     // Add the ground
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.75, restitution: .95 });
-    ground.isPickable = true;
-    
-    
-    // Add the sphere
-    sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-    sphere.position.y = 5;
-    sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
-    sphere.isPickable = true;
-    
+    ground.isPickable = true;    
     
     // Add all the boxes
     
@@ -84,12 +76,16 @@ var createScene = function () {
     
     
     scene.onPointerDown = function (evt, pickResult) {
-        console.log(pickResult.pickedMesh);
-        if (pickResult.hit){
-            console.log(pickResult.pickedMesh);
-        } else {
-            console.error("pickResult was not hit");
-        }
+        var startPosn = scene.activeCamera.position;
+        sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+        console.log(sphere);
+        sphere.position.y = startPosn.y ;
+        sphere.position.x = startPosn.x;
+        sphere.position.z = startPosn.z;
+        sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
+//        sphere.isPickable = true;
+        sphere.applyImpulse(new BABYLON.Vector3(0, 0, 100),
+                            sphere.getAbsolutePosition());
             
     }
     
