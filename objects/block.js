@@ -60,4 +60,3 @@ var Block = function(xml_node,parent) {
 
     return self;
 }
-
