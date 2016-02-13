@@ -39,6 +39,7 @@ var createScene = function () {
     // Parameters: id, width, scene
     var box1 = BABYLON.Mesh.CreateBox('box1',2,scene);
     box1.position.y = 1;
+    box1.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
     var box2 = BABYLON.Mesh.CreateBox('box2',.1,scene);
     box2.position = new BABYLON.Vector3(1,1,1);
     var box3 = BABYLON.Mesh.CreateBox('box3',.1,scene);
