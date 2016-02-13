@@ -16,9 +16,11 @@ var createScene = function () {
     // This attaches the camera to the canvas
     camera.attachControl(canvas, false);
     // This creates a light, aiming 0,1,0 - to the sky.
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    var light = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+    light.position = new BABYLON.Vector3(-300,300,600);
     // Dim the light a small amount
     light.intensity = .5;
+    var shadowGenerator = new BABYLON.ShadowGenerator(2048, light);
 
     // Add the physics
     scene.enablePhysics();
@@ -33,6 +35,7 @@ var createScene = function () {
     // Let's try our built-in 'ground' shape. Params: name, width, depth, subdivisions, scene
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution: .95 });
+    ground.receiveShadows = true;
 
 
     // The Box is initially centered at the origin
@@ -40,11 +43,12 @@ var createScene = function () {
     var box1 = BABYLON.Mesh.CreateBox('box1',2,scene);
     box1.position.y = 1;
     box1.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box1.setPhysicsState = true;
     var box2 = BABYLON.Mesh.CreateBox('box2',.1,scene);
     box2.position = new BABYLON.Vector3(1,1,1);
     var box3 = BABYLON.Mesh.CreateBox('box3',.1,scene);
     box3.position = new BABYLON.Vector3(-1,1,-1);
-
+    
 
     // Leave this function
     return scene;
@@ -71,3 +75,6 @@ canvas.addEventListener('click', function(evt) {
     dir.normalize();
     pickResult.pickedMesh.applyImpulse(dir.scale(10), pickResult.pickedPoint);
 });
+
+
+
