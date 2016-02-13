@@ -1,72 +1,122 @@
-// Get the canvas element from our HTML below
+// Important "global" variables
 var canvas = document.querySelector("#canvas");
-// Load the BABYLON 3D engine
 var engine = new BABYLON.Engine(canvas, true);
-// -------------------------------------------------------------
-// Here begins a function that we will 'call' just after it's built
-var createScene = function () {
-    // Now create a basic Babylon Scene object
-    var scene = new BABYLON.Scene(engine);
-    // Change the scene background color to green.
-    scene.clearColor = new BABYLON.Color3(0, 1, 0);
-    // This creates and positions a free camera
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    // This targets the camera to scene origin
-    camera.setTarget(BABYLON.Vector3.Zero());
-    // This attaches the camera to the canvas
-    camera.attachControl(canvas, false);
-    // This creates a light, aiming 0,1,0 - to the sky.
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-    // Dim the light a small amount
-    light.intensity = .5;
 
-    // Add the physics
+
+
+// Main function
+var createScene = function () {
+    
+    // Make the scene
+    var scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(0, 1, 0); // Background color
+    
+    // Set the camera
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene); //Initialiaze camera at (0,5,-20)
+    camera.setTarget(BABYLON.Vector3.Zero()); // point at origin
+    camera.attachControl(canvas, false);
+    
+    // Set the light
+    var light = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+    light.intensity = .5;
+    
+    
+    // Physics
     scene.enablePhysics();
     scene.setGravity(new BABYLON.Vector3(0,-10,0));
-
-    // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
-    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-    // Move the sphere upward
+    
+    // Add the ground
+    var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
+    ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.75, restitution: .95 });
+    ground.isPickable = true;
+    
+    
+    // Add the sphere
+    sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
     sphere.position.y = 5;
     sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
-
-    // Let's try our built-in 'ground' shape. Params: name, width, depth, subdivisions, scene
-    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
-    ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution: .95 });
-
-
-    // The Box is initially centered at the origin
-    // Parameters: id, width, scene
+    sphere.isPickable = true;
+    
+    
+    // Add all the boxes
+    
     var box1 = BABYLON.Mesh.CreateBox('box1',2,scene);
     box1.position.y = 1;
-    var box2 = BABYLON.Mesh.CreateBox('box2',.1,scene);
-    box2.position = new BABYLON.Vector3(1,1,1);
-    var box3 = BABYLON.Mesh.CreateBox('box3',.1,scene);
-    box3.position = new BABYLON.Vector3(-1,1,-1);
-
-
-    // Leave this function
+    box1.position.z = 10;
+    box1.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box1.setPhysicsState = true;
+    
+    var box2 = BABYLON.Mesh.CreateBox('box2',2,scene);
+    box2.position.y = 1;
+    box2.position.z = 10;
+    box2.position.x = 2.1;
+    box2.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box2.setPhysicsState = true;
+    
+    var box3 = BABYLON.Mesh.CreateBox('box3',2,scene);
+    box3.position.y = 1;
+    box3.position.z = 10;
+    box3.position.x = -2.1;
+    box3.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box3.setPhysicsState = true;
+    
+    
+    var box4 = BABYLON.Mesh.CreateBox('box4',2,scene);
+    box4.position.y = 3;
+    box4.position.z = 10;
+    box4.position.x = -1.05;
+    box4.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box4.setPhysicsState = true;
+    
+    var box5 = BABYLON.Mesh.CreateBox('box5',2,scene);
+    box5.position.y = 3;
+    box5.position.z = 10;
+    box5.position.x = 1.05;
+    box5.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box5.setPhysicsState = true;
+    
+    var box6 = BABYLON.Mesh.CreateBox('box6',2,scene);
+    box6.position.y = 5;
+    box6.position.z = 10;
+    box6.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1})
+    box6.setPhysicsState = true;
+    box6.isPickable = true;
+    
+    
+    scene.onPointerDown = function (evt, pickResult) {
+        console.log(pickResult.pickedMesh);
+        if (pickResult.hit){
+            console.log(pickResult.pickedMesh);
+        } else {
+            console.error("pickResult was not hit");
+        }
+            
+    }
+    
     return scene;
-}; // End of createScene function
-// -------------------------------------------------------------
-// Now, call the createScene function that you just finished creating
+}
+
+
+// Create the scene
 var scene = createScene();
 
-
-// Register a render loop to repeatedly render the scene
 engine.runRenderLoop(function () {
     scene.render();
 });
-// Watch for browser/canvas resize events
+
 window.addEventListener("resize", function () {
     engine.resize();
 });
 
 
-
 canvas.addEventListener('click', function(evt) {
+    console.log("onclick");
     var pickResult = scene.pick(evt.clientX, evt.clientY);
     var dir = pickResult.pickedPoint.subtract(scene.activeCamera.position);
+    if (pickResult.hit) {
+    console.log(pickResult.pickedMesh);
     dir.normalize();
-    pickResult.pickedMesh.applyImpulse(dir.scale(10), pickResult.pickedPoint);
+    pickResult.pickedMesh.applyImpulse(new BABYLON.Vector3(0, 0, 1000),
+    pickResult.pickedPoint);
+    }
 });
