@@ -13,6 +13,12 @@ var Block = function(xml_node) {
     console.log(n.getAttribute('color'));
     console.log(n.children);
 
+    var size = 1;
+    if (n.hasAttribute('size'))
+	size = n.getAttribute('size');
+    var self = BABYLON.Mesh.CreateBox("",size,scene);
+    
+
 ///////////////////////
 // Private Functions //
 ///////////////////////
