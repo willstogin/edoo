@@ -7,13 +7,12 @@ var hv = $('#handle-vertical'),
     js = $('#javascript'),
     can = $('#canvas'),
     con = $('#console'),
-    w = $('body').width() - ($('body').width() * 0.005),
-    h = $('body').height() - ($('body').height() * 0.02);
+    w = $('body').width() - $('#handle-vertical').width(),
+    h = $('body').height() - $('#handle-horizontal-left').height();
 
 var isVerticalDragging = false;
 var isHorizontalLeftDragging = false;
 var isHorizontalRightDragging = false;
-var intialY = 0;
 
 hv.mousedown(function(e){
     isVerticalDragging = true;
@@ -49,4 +48,10 @@ $(document).mouseup(function(){
         //con.css('height', h + e.pageY);
         //$('#console-container').css('top', intialY - e.pageY);
     }
+});
+
+$(document).ready(function(){
+  l.css('width', w/2);
+  r.css('width', w/2);
+  $('.col-md-12').css('height', h/2);
 });
