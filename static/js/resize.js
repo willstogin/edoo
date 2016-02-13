@@ -8,7 +8,7 @@ var hv = $('#handle-vertical'),
     can = $('#canvas'),
     con = $('#console'),
     w = $('body').width() - $('#handle-vertical').width(),
-    h = $('body').height() - ($('body').height() * 0.02);
+    h = $('body').height() - $('#handle-horizontal-left').height();
 
 var isVerticalDragging = false;
 var isHorizontalLeftDragging = false;
@@ -53,4 +53,5 @@ $(document).mouseup(function(){
 $(document).ready(function(){
   l.css('width', w/2);
   r.css('width', w/2);
+  $('.col-md-12').css('height', h/2);
 });
