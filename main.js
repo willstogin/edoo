@@ -31,7 +31,7 @@ var createScene = function () {
     sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
 
     // Let's try our built-in 'ground' shape. Params: name, width, depth, subdivisions, scene
-    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+    var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution: .95 });
 
 
