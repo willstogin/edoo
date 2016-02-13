@@ -6,7 +6,7 @@ var Block = function(xml_node) {
 // Constructor //
 /////////////////
 
-    
+
     // TODO insert construction code here
     console.log("creating a block!");
 
@@ -15,9 +15,9 @@ var Block = function(xml_node) {
 
     var size = 1;
     if (n.hasAttribute('size'))
-	size = n.getAttribute('size');
+	     size = n.getAttribute('size');
     var self = BABYLON.Mesh.CreateBox("",size,scene);
-    
+
 
 ///////////////////////
 // Private Functions //
@@ -35,4 +35,3 @@ var Block = function(xml_node) {
 	getType: getType
     }
 }
-

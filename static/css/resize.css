@@ -1,4 +1,8 @@
-#left,#right{
+#left{
+    float:left;
+    height:100%;
+}
+#right{
     float:left;
     height:100%;
 }

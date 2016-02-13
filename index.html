@@ -1,6 +1,6 @@
 
 <head>
-  <title>HACK THE WORLD</title>
+  <title>Edoo</title>
   <script src="static/js/jquery-2.2.0.min.js"></script>
   <!--Custom resize plugin-->
   <link rel="stylesheet" href="static/css/resize.css">
@@ -36,16 +36,19 @@
       height:100%;
       width: 100%;
     }
-    #canvas {
-      height:100%;
-      width: 100%;
-    }
     .col-md-12 {
       padding-right:0;
       padding-left:0;
     }
     .CodeMirror{
       height: auto;
+    }
+    .left-box{
+      width: 30%;
+    }
+    #canvas {
+      height:100%;
+      width: 100%;
     }
     #container {
       width: 100%;
@@ -75,7 +78,7 @@
 <body>
 	   <div class="fill">
         <div id="left">
-          <div class="col-md-12">
+          <div class="col-md-12" id="xml-container">
               <textarea id="xml" class="lined-text-area"><block>
 </block></textarea>
           </div>
@@ -88,7 +91,7 @@
         </div>
         <div id="handle-vertical"></div>
         <div id="right">
-          <div class="col-md-12 container">
+          <div class="col-md-12 container" id="canvas-container">
                <canvas id="canvas"></canvas>
                <button id="refresh-canvas" class="btn btn-primary" onclick="parseXmlTextArea();">Refresh</button>
           </div>
