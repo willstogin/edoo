@@ -32,7 +32,7 @@ function parseXml(txt) {
 
     // Remove previous objects from xml
     while (objectsFromXml.length > 0)
-	objectsFromXml.pop().dispose();
+	objectsFromXml.pop().remove();
 
     // All the nodes that are roots.
     rootNodes = xmlDoc.children[0].children;

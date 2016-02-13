@@ -57,6 +57,10 @@ var Block = function(xml_node,parent) {
     self.getType = function() {
 	return "block";
     }
+    
+    self.remove = function() {
+	self.dispose();
+    }
 
     return self;
 }
