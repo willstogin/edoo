@@ -36,10 +36,6 @@ function parseXml(txt) {
 }
 
 function parseXmlTextArea() {
-
-    var xmlTextArea = document.getElementById("xml");
-    var xml = xmlTextArea.value;
-
+    var xml = xmlCodeMirror.getValue();
     parseXml(xml);
-
 }

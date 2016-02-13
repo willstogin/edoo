@@ -78,8 +78,14 @@
 	   <div class="fill">
         <div id="left">
           <div class="col-md-12">
-              <textarea id="xml" class="lined-text-area"><block>
-</block></textarea>
+              <textarea id="xml" class="lined-text-area">
+<block x="-.5" y=".5">
+</block>
+<block y="1.5">
+</block>
+<block x=".5" y=".5">
+</block>
+</textarea>
           </div>
           <div id="handle-horizontal-left"></div>
           <div class="col-md-12" id="js-container">
@@ -120,15 +126,15 @@
      <script>
      //Setup CodeMirror
      var xmlTextArea = document.getElementById('xml');
-     var myCodeMirror = CodeMirror.fromTextArea(xmlTextArea, {
+     var xmlCodeMirror = CodeMirror.fromTextArea(xmlTextArea, {
        lineNumbers: true,
        value : '<root>\n</root>',
        theme : 'base16-dark',
        mode :'xml'
      });
 
-     var javascriptTextArea = document.getElementById('javascript');
-     var myCodeMirror = CodeMirror.fromTextArea(javascriptTextArea, {
+     var jsTextArea = document.getElementById('javascript');
+     var jsCodeMirror = CodeMirror.fromTextArea(javascriptTextArea, {
        lineNumbers: true,
        theme : 'base16-dark',
        mode : 'javascript'
