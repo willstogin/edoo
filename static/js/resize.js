@@ -13,7 +13,6 @@ var hv = $('#handle-vertical'),
 var isVerticalDragging = false;
 var isHorizontalLeftDragging = false;
 var isHorizontalRightDragging = false;
-var intialY = 0;
 
 hv.mousedown(function(e){
     isVerticalDragging = true;
@@ -51,3 +50,7 @@ $(document).mouseup(function(){
     }
 });
 
+$(document).ready(function(){
+  l.css('width', w/2);
+  r.css('width', w/2);
+});
