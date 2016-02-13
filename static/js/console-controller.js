@@ -1,8 +1,8 @@
-var container = $('.console');
+var container = $('#console');
 var controller = container.console({
-  promptLabel: 'Demo> ',
+  promptLabel: '> ',
   commandValidate:function(line){
-    if (line == "") return false;
+    if (line == "") return true;
     else return true;
   },
   commandHandle:function(line){
@@ -17,6 +17,6 @@ var controller = container.console({
   charInsertTrigger:function(keycode,line){
      // Let you type until you press a-z
      // Never allow zero.
-     return !line.match(/[a-z]+/) && keycode != '0'.charCodeAt(0);
+     return true;
   }
 });
