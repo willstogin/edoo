@@ -15,15 +15,15 @@ var createScene = function () {
     var skybox = BABYLON.Mesh.CreateBox("skyBox", 100.0, scene);
 
     // The sky creation
-//    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-//    skyboxMaterial.backFaceCulling = false;
-//    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 1);
-//    skyboxMaterial.specularColor = new BABYLON.Color3(0, 1, 0);
-//    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("../assets/cubemap", scene);
-//    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-//
+    var skyMat = new BABYLON.StandardMaterial("skyMat", scene);
+    skyMat.backFaceCulling = false;
+    skyMat.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    skyMat.specularColor = new BABYLON.Color3(0, 1, 0);
+    skyMat.reflectionTexture = new BABYLON.CubeTexture("assets/cubemap/cubemap", scene);
+    skyMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+
 //    // box + sky = skybox !
-//    skybox.material = skyboxMaterial;
+    skybox.material = skyMat;
     
     // Set the camera
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene); //Initialiaze camera at (0,5,-20)
