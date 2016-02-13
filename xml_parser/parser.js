@@ -1,6 +1,6 @@
 
-// Basic DOM routines
-
+/*
+// Use node.children instead.
 function childNodes(node){
     var children = [];
     subNode = node.firstChild;
@@ -11,17 +11,6 @@ function childNodes(node){
 	subNode = subNode.nextSibling;
     }
     return children;
-}
-
-// The parser
-
-/*
-function handleNode(node) {
-    console.log(node.tagName);
-    var children = childNodes(node);
-    for (var i=0; i<children.length; i++) {
-	handleNode(children[i]);
-    }
 }
 */
 
@@ -40,7 +29,7 @@ function parseXml(txt) {
     }
 
     // All the nodes that are roots.
-    rootNodes = childNodes(childNodes(xmlDoc)[0])
+    rootNodes = xmlDoc.children[0].children;
     for (var i=0; i<rootNodes.length; i++) {
 	createObjectForXmlNode(rootNodes[i]);
     }
