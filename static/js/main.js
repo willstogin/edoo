@@ -130,7 +130,8 @@ var createScene = function () {
     scene.onPointerDown = function (evt, pickResult) {
         // Get the picked id
         if (pickResult.hit) {
-            console.log(pickResult.pickedMesh.id);
+	    var name = pickResult.pickedMesh.id;
+	    controller.promptText(controller.promptText()+name);
         }
         
         /*
