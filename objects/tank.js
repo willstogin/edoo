@@ -14,7 +14,7 @@ var Tank = function(xml_node,parent) {
     var x = 0;
     var y = height/2;
     var z = 0;
-    //Attributes not accessible by xml
+    // Attributes not accessible by xml
     var angle = 0;
     var rotationQuaternion;
 
@@ -69,7 +69,7 @@ var Tank = function(xml_node,parent) {
 	}
 	// TODO other children?
     }
-//    wheels.parent = self;
+    wheels.parent = self;
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
@@ -78,6 +78,7 @@ var Tank = function(xml_node,parent) {
 
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
     self.showBoundingBox = true;
+
 
     // Define references to this object.
     window[id] = self;
