@@ -14,7 +14,8 @@ var Tank = function(xml_node,parent) {
     var x = 0;
     var y = height/2;
     var z = 0;
-
+    var lastPosition = 0;
+    var zAnimation = new BABYLON.Animation("tankZAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     if (n.hasAttribute('id')) {
 	id = n.getAttribute('id');
     } else {
@@ -33,7 +34,7 @@ var Tank = function(xml_node,parent) {
 	y = n.getAttribute('y');
     if (n.hasAttribute('z'))
 	z = n.getAttribute('z');
-        
+
     var self = BABYLON.Mesh.CreateBox(id,1,scene);
     self.scaling.x = width;
     self.scaling.y = height;
@@ -45,12 +46,12 @@ var Tank = function(xml_node,parent) {
     wheels.scaling.z = 1/length;
     wheels.isVisible = false;
     var maxWheelRadius = 0;
-    
 
-    
+
+
     for (var i=0; i<n.children.length; i++) {
 	   var obj = createObjectForXmlNode(n.children[i]);
-      
+
         if (obj.getType() == "turret") {
             obj.position = new BABYLON.Vector3(0, height/4, 0);
             obj.scaling.x = 1/width;
@@ -80,7 +81,7 @@ var Tank = function(xml_node,parent) {
     if (parent != undefined) {
 	parent[id] = self;
     }
-    
+
 ///////////////////////
 // Private Functions //
 ///////////////////////
@@ -92,13 +93,29 @@ var Tank = function(xml_node,parent) {
     self.getType = function() {
 	return "tank";
     }
-    
+
     self.remove = function() {
 	self.dispose();
     }
 
     self.getId = function() {
 	return id;
+    }
+
+    self.moveZ = function(distance) {
+      var keys = [];
+      keys.push({
+        frame: 0,
+        value: lastPosition
+      });
+      keys.push({
+        frame: 30,
+        value: lastPosition + distance
+      });
+      lastPosition = lastPosition + distance;
+      zAnimation.setKeys(keys);
+      self.animations.push(zAnimation);
+      scene.beginAnimation(self, 0, 30, true);
     }
 
     return self;
