@@ -23,10 +23,8 @@ var Wheels = function(xml_node,parent) {
 	radius = n.getAttribute('radius');
     if (n.hasAttribute('width'))
 	width = n.getAttribute('width');
-    if (n.hasAttribute('count')) {
+    if (n.hasAttribute('count'))
 	count = n.getAttribute('count');
-	console.log(count);
-    }
     if (n.hasAttribute('side'))
 	side = n.getAttribute('side');
 
@@ -38,14 +36,13 @@ var Wheels = function(xml_node,parent) {
 	var wheel = BABYLON.Mesh.CreateCylinder("",width,radius*2, radius*2, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
 	wheel.rotation.y = Math.PI;
   	wheel.rotation.z = -Math.PI / 2;
-	wheel.position = new BABYLON.Vector3(0,0, radius * 2 * i);
-	wheel.parent = self;
 	if (side=="left") {
-	    wheel.position = new BABYLON.Vector3(-width/2,0,0);
+	    wheel.position = new BABYLON.Vector3(-width/2,0,radius*2*i-radius*(count-1));
 	} else if (side=="right") {
-	    wheel.position = new BABYLON.Vector3(width/2,0,0);
+	    wheel.position = new BABYLON.Vector3(width/2,0,radius*2*i-radius*(count-1));
 	}
 	wheel.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
+	wheel.parent = self;
 //	wheels.push(wheel);
     }
 
