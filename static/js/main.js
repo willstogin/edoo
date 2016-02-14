@@ -127,6 +127,7 @@ var createScene = function () {
 //    OBJECTS.push(box6);
     
     
+/*
     scene.onPointerDown = function (evt, pickResult) {
         var startPosn = scene.activeCamera.position;
         sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
@@ -143,6 +144,7 @@ var createScene = function () {
         // Add sphere to the list of objects
         OBJECTS.push(sphere);    
     }
+*/
     
     return scene;
 }
@@ -163,14 +165,14 @@ window.addEventListener("resize", function () {
 
 
 canvas.addEventListener('click', function(evt) {
-//    console.log("onclick");
     var pickResult = scene.pick(evt.clientX, evt.clientY);
-    var dir = pickResult.pickedPoint.subtract(scene.activeCamera.position);
     if (pickResult.hit) {
-//    console.log(pickResult.pickedMesh);
-    dir.normalize();
-    pickResult.pickedMesh.applyImpulse(new BABYLON.Vector3(0, 0, 1000),
-    pickResult.pickedPoint);
+	console.log(pickResult.pickedMesh.id);
+/*	var dir = pickResult.pickedPoint.subtract(scene.activeCamera.position);
+	dir.normalize();
+	pickResult.pickedMesh.applyImpulse(new BABYLON.Vector3(0, 0, 1000),
+					   pickResult.pickedPoint);
+*/
     }
 });
 
