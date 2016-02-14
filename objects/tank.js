@@ -46,17 +46,16 @@ var Tank = function(xml_node,parent) {
     wheels.isVisible = false;
     var maxWheelRadius = 0;
     
-    var turret = BABYLON.Mesh.CreateBox(id+"_turret",0, scene);
-    turret.scaling.x = 1/width;
-    turret.scaling.y = 1/height;
-    turret.scaling.z = 1/length;
-    turret.isVisible = false;
+
     
     for (var i=0; i<n.children.length; i++) {
 	   var obj = createObjectForXmlNode(n.children[i]);
       
         if (obj.getType() == "turret") {
-            obj.position = new BABYLON.Vector3(0, height, 0);
+            obj.position = new BABYLON.Vector3(0, height/4, 0);
+            obj.scaling.x = 1/width;
+            obj.scaling.y = 1/height;
+            obj.scaling.z = 1/length;
             obj.parent = self;
         } else if (obj.getType()=="wheels") {
 	       if (obj.getSide()=="left") {

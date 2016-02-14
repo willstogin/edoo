@@ -125,7 +125,8 @@ var createScene = function () {
     box6.isPickable = true;
     shadowGenerator.getShadowMap().renderList.push(box6);
 //    OBJECTS.push(box6);
-    
+
+/*
     scene.onPointerDown = function (evt, pickResult) {
         // Get the picked id
         if (pickResult.hit) {
@@ -148,6 +149,7 @@ var createScene = function () {
         // Add sphere to the list of objects
         OBJECTS.push(sphere);    
     }
+*/
     
     return scene;
 }
@@ -165,7 +167,6 @@ engine.runRenderLoop(function () {
 window.addEventListener("resize", function () {
     engine.resize();
 });
-
 
 function cleanObjects() {
     for (var n = 0; n < OBJECTS.length; n++) {
