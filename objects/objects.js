@@ -2,7 +2,8 @@
 
 object_classes = {
     "block": Block,
-    "tank": Tank
+    "tank": Tank,
+    "wheels" : Wheels
 }
 
 

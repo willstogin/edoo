@@ -7,9 +7,9 @@ var Tank = function(xml_node,parent) {
 /////////////////
 
     // Attributes possibly from xml
-    var length = 1.5;
-    var width = 1;
-    var height = 0.5;
+    var length = 3;
+    var width = 2;
+    var height = 1;
     var x = 0;
     var y = height/2;
     var z = 0;
@@ -29,13 +29,10 @@ var Tank = function(xml_node,parent) {
 	z = n.getAttribute('z');
         
     var self = BABYLON.Mesh.CreateBox(id,1,scene);
-    self.scaling.x = length;
-    self.scaling.y = width;
-    self.scaling.z = height;
+    self.scaling.x = width;
+    self.scaling.y = height;
+    self.scaling.z = length;
     self.position = new BABYLON.Vector3(x,y,z);
-    var material = new BABYLON.StandardMaterial("",scene);
-    material.diffuseColor = BABYLON.Color3(1,0,0);
-//    self.material = material;
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
