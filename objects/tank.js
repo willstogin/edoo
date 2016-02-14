@@ -148,7 +148,12 @@ var Tank = function(xml_node,parent) {
 
     self.move = function(dist) {
 	var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-	animation.endFrame = 15;
+
+	// Determine the number of frames for the animation.
+	ups = 5; // units per second
+	fps = 30; // frames per second
+	animation.endFrame = Math.round(Math.abs((1.0*dist*fps)/ups));
+
 	var keys = [];
 	keys.push({
             frame: 0,
@@ -181,7 +186,11 @@ var Tank = function(xml_node,parent) {
           30,
           BABYLON.Animation.ANIMATIONTYPE_QUATERNION,
           BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-	animation.endFrame = 15;
+
+	// Determine the number of frames for the animation.
+	rps = Math.PI/2; // radians per second
+	fps = 30; // frames per second
+	animation.endFrame = Math.round(Math.abs((1.0*radians*fps)/rps));
 	
 
       // Animations keys
