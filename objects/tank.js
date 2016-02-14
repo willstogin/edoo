@@ -21,7 +21,7 @@ var Tank = function(xml_node,parent) {
     var zRotationAnimation = new BABYLON.Animation("tankzRotationAnimation", "rotation.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
     //Attributes not accessible by xml
     var angle = 0;
-
+    var rotationQuaternion;
 
     if (n.hasAttribute('id')) {
 	id = n.getAttribute('id');
@@ -81,6 +81,9 @@ var Tank = function(xml_node,parent) {
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
+    var position = self.position.clone();
+    rotationQuaternion = BABYLON.Quaternion.Identity();
+
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
@@ -105,12 +108,12 @@ function enqueueAnimation(animation) {
 }
 
 function doNextAnimation() {
-  if(animationQueue.length > 0) {
-      var animation = animationQueue.shift();
-      runAnimation(animation);
-  } else {
-    animating = false;
-  }
+    if(animationQueue.length > 0) {
+        var animation = animationQueue.shift();
+        runAnimation(animation);
+    } else {
+      animating = false;
+    }
 }
 
 function runAnimation(animation) {
@@ -138,17 +141,20 @@ function runAnimation(animation) {
 
 
     self.move = function(dist) {
-      var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+      var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
       console.log(angle);
+
       var keys = [];
       keys.push({
         frame: 0,
-        value: self.position
+        value: position.clone()
       });
       keys.push({
         frame: 30,
-        value: self.position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
+        value: position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
       });
+
+      position.addInPlace(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)));
 
       animation.setKeys(keys);
       enqueueAnimation(animation);
@@ -185,12 +191,14 @@ function runAnimation(animation) {
       self.animations = [];
     }
 
-    self.rotate = function(radians) {
+    self.rotate = function(degrees) {
+      var radians = degrees * Math.PI/180;
       angle += radians;
-      var rotationQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, radians);
-      var end = self.rotationQuaternion.multiply(rotationQuaternion);
+      var deltaRotationQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, radians);
+      var end = rotationQuaternion.multiply(deltaRotationQuaternion);
 
-      var start = self.rotationQuaternion;
+      var start = rotationQuaternion;
+      rotationQuaternion = end.clone();
 
       // Create the Animation object
       var animateEnding = new BABYLON.Animation(
