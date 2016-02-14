@@ -129,7 +129,7 @@ var createScene = function () {
 //    OBJECTS.push(box6);
 
 
-    scene.onPointerDown = function (evt, pickResult) {
+    scene.onPointerPick = function (evt, pickResult) {
         // Get the picked id
         if (pickResult.hit) {
 	    var name = pickResult.pickedMesh.id;

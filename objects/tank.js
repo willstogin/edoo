@@ -86,7 +86,8 @@ var Tank = function(xml_node,parent) {
     var position = self.position.clone();
     rotationQuaternion = BABYLON.Quaternion.Identity();
 
-    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
+    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, restitution: 0});
+    self.showBoundingBox = true;
 
     // Define references to this object.
     window[id] = self;
@@ -172,11 +173,12 @@ function runAnimation(animation) {
 	return id;
     }
 
+    self.stop = function(){
+      animationQueue = [];
+    }
 
     self.move = function(dist) {
       var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-      console.log(angle);
-
       var keys = [];
       keys.push({
         frame: 0,
