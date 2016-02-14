@@ -141,10 +141,41 @@ var Tank = function(xml_node,parent) {
       self.animations = [];
     }
 
-    self.rotateTank = function(degrees) {
-      angle += degrees;
-      //var zAnimation = new BABYLON.Animation("mov", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-      self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
+    self.rotate = function(radians) {
+      angle += radians;
+      var rotationQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, radians);
+      var end = self.rotationQuaternion.multiply(rotationQuaternion);
+
+      var start = self.rotationQuaternion;
+
+      // Create the Animation object
+      var animateEnding = new BABYLON.Animation(
+          "moveY",
+          "rotationQuaternion",
+          30,
+          BABYLON.Animation.ANIMATIONTYPE_QUATERNION,
+          BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+
+      // Animations keys
+      var keys = [];
+      keys.push({
+          frame: 0,
+          value: start
+      },{
+          frame: 30,
+          value: end
+      });
+
+      // Add these keys to the animation
+      animateEnding.setKeys(keys);
+
+      // Link the animation to the mesh
+      self.animations.push(animateEnding);
+
+      // Run the animation !
+      scene.beginAnimation(self, 0, 30, false, 1);
+      self.animations = [];
+      //self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
     }
 
     return self;
