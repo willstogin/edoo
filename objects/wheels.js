@@ -6,41 +6,53 @@ var Wheels = function(xml_node,parent) {
 // Constructor //
 /////////////////
 
+    // Attributes possibly from xml
+    var id;
     var radius = 1;
     var width = 1;
     var count = 1;
-    var side = "";
-    var id = "";
+    var side = "left";
+
+    if (n.hasAttribute('id')) {
+	id = n.getAttribute('id');
+    } else {
+	id = getNewId();
+    }
 
     if (n.hasAttribute('radius'))
 	radius = n.getAttribute('radius');
     if (n.hasAttribute('width'))
 	width = n.getAttribute('width');
-    if (n.hasAttribute('count'))
+    if (n.hasAttribute('count')) {
 	count = n.getAttribute('count');
+	console.log(count);
+    }
     if (n.hasAttribute('side'))
 	side = n.getAttribute('side');
-    if (n.hasAttribute('id'))
-  id = n.getAttribute('id');
+
+    var self = BABYLON.Mesh.CreateBox(id,0,scene);
+    self.isVisible = false;
+//    var wheels = [];
 
     for(var i = 0; i < count; i++) {
-      var self = BABYLON.Mesh.CreateCylinder(id,width,radius*2, radius*2, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
-      self.rotation.y = Math.PI;
-  	  self.rotation.z = -Math.PI / 2;
-      self.position = new BABYLON.Vector3(0,0.5, radius * 2 * i);
+	var wheel = BABYLON.Mesh.CreateCylinder("",width,radius*2, radius*2, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
+	wheel.rotation.y = Math.PI;
+  	wheel.rotation.z = -Math.PI / 2;
+	wheel.position = new BABYLON.Vector3(0,0, radius * 2 * i);
+	wheel.parent = self;
+	if (side=="left") {
+	    wheel.position = new BABYLON.Vector3(-width/2,0,0);
+	} else if (side=="right") {
+	    wheel.position = new BABYLON.Vector3(width/2,0,0);
+	}
+	wheel.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
+//	wheels.push(wheel);
     }
-    //var material = new BABYLON.StandardMaterial("",scene);
-    //material.diffuseColor = BABYLON.Color3(1,0,0);
-    //self.material = material;
-    //self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
-    if (id != "") {
-	if (parent == undefined) {
-	    window[id] = self;
-	} else {
-	    parent[id] = self;
-	}
+    window[id] = self;
+    if (parent != undefined) {
+	parent[id] = self;
     }
 
 ///////////////////////
@@ -52,11 +64,23 @@ var Wheels = function(xml_node,parent) {
 //////////////////////
 
     self.getType = function() {
-	return "Wheels";
+	return "wheels";
     }
 
     self.remove = function() {
 	self.dispose();
+    }
+
+    self.getId = function() {
+	return self.parent.getId();
+    }
+
+    self.getRadius = function() {
+	return radius;
+    }
+
+    self.getSide = function() {
+	return side;
     }
 
     return self;

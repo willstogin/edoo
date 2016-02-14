@@ -47,12 +47,9 @@ var Block = function(xml_node,parent) {
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
-    if (id != "") {
-	if (parent == undefined) {
-	    window[id] = self;
-	} else {
-	    parent[id] = self;
-	}
+    window[id] = self;
+    if (parent != undefined) {
+	parent[id] = self;
     }
 
 ///////////////////////

@@ -38,16 +38,34 @@ var Tank = function(xml_node,parent) {
     self.scaling.x = width;
     self.scaling.y = height;
     self.scaling.z = length;
+
+    var wheels = BABYLON.Mesh.CreateBox(id+"_wheels",0,scene);
+    wheels.isVisible = false;
+    var maxWheelRadius = 0;
+    for (var i=0; i<n.children.length; i++) {
+	var obj = createObjectForXmlNode(n.children[i]);
+	if (obj.getType()=="wheels") {
+	    if (obj.getSide()=="left") {
+		obj.position = new BABYLON.Vector3(-width/2,0,0);
+	    } else {
+		obj.position = new BABYLON.Vector3(width/2,0,0);
+	    }
+	    if (obj.getRadius() > maxWheelRadius)
+		maxWheelRadius = obj.getRadius();
+	    obj.parent = wheels;
+	}
+	// TODO other children?
+    }
+    wheels.parent = self;
+
+    y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
-    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
+//    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
 
     // Define references to this object.
-    if (id != "") {
-	if (parent == undefined) {
-	    window[id] = self;
-	} else {
-	    parent[id] = self;
-	}
+    window[id] = self;
+    if (parent != undefined) {
+	parent[id] = self;
     }
     
 ///////////////////////
@@ -59,7 +77,7 @@ var Tank = function(xml_node,parent) {
 //////////////////////
 
     self.getType = function() {
-	return "block";
+	return "tank";
     }
     
     self.remove = function() {
