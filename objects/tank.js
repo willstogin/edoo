@@ -7,13 +7,19 @@ var Tank = function(xml_node,parent) {
 /////////////////
 
     // Attributes possibly from xml
+    var id;
     var length = 3;
     var width = 2;
     var height = 1;
     var x = 0;
     var y = height/2;
     var z = 0;
-    var id = "";
+
+    if (n.hasAttribute('id')) {
+	id = n.getAttribute('id');
+    } else {
+	id = getNewId();
+    }
 
     if (n.hasAttribute('length'))
 	size = n.getAttribute('length');

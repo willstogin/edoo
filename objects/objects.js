@@ -15,3 +15,11 @@ function createObjectForXmlNode(node) {
 	console.log("Could not create object of type: '"+type+"'");
     }
 }
+
+
+var getNewId = (function() {
+    var count = 1000;
+    return function() {
+	return "_"+count++;
+    }
+})();

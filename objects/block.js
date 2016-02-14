@@ -6,13 +6,20 @@ var Block = function(xml_node,parent) {
 // Constructor //
 /////////////////
 
+    // Attributes possibly from xml
+    var id;
     var length = 1;
     var width = 1;
     var height = 1;
     var x = 0;
     var y = height/2;
     var z = 0;
-    var id = "";
+
+    if (n.hasAttribute('id')) {
+	id = n.getAttribute('id');
+    } else {
+	id = getNewId();
+    }
 
     if (n.hasAttribute('length'))
 	length = n.getAttribute('length');
@@ -26,8 +33,6 @@ var Block = function(xml_node,parent) {
 	y = n.getAttribute('y');
     if (n.hasAttribute('z'))
 	z = n.getAttribute('z');
-    if (n.hasAttribute('id'))
-	id = n.getAttribute('id');
 
     var self = BABYLON.Mesh.CreateBox(id,1,scene);
     self.scaling.x = width;
