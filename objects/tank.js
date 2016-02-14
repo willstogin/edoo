@@ -113,7 +113,7 @@ function doNextAnimation() {
 function runAnimation(animation) {
   animating = true;
   self.animations.push(animation);
-  scene.beginAnimation(self, 0, 30, false, 1, doNextAnimation);
+  scene.beginAnimation(self, 0, animation.endFrame, false, 1, doNextAnimation);
   self.animations = [];
 }
 
@@ -138,21 +138,22 @@ function runAnimation(animation) {
     }
 
     self.move = function(dist) {
-      var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-      var keys = [];
-      keys.push({
-        frame: 0,
-        value: position.clone()
-      });
-      keys.push({
-        frame: 30,
-        value: position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
-      });
+	var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	animation.endFrame = 15;
+	var keys = [];
+	keys.push({
+            frame: 0,
+            value: position.clone()
+	});
+	keys.push({
+            frame: animation.endFrame,
+            value: position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
+	});
 
-      position.addInPlace(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)));
+	position.addInPlace(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)));
 
-      animation.setKeys(keys);
-      enqueueAnimation(animation);
+	animation.setKeys(keys);
+	enqueueAnimation(animation);
     }
 
     self.rotate = function(degrees) {
@@ -165,12 +166,14 @@ function runAnimation(animation) {
       rotationQuaternion = end.clone();
 
       // Create the Animation object
-      var animateEnding = new BABYLON.Animation(
+      var animation = new BABYLON.Animation(
           "moveY",
           "rotationQuaternion",
           30,
           BABYLON.Animation.ANIMATIONTYPE_QUATERNION,
           BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+	animation.endFrame = 15;
+	
 
       // Animations keys
       var keys = [];
@@ -178,16 +181,16 @@ function runAnimation(animation) {
           frame: 0,
           value: start
       },{
-          frame: 30,
+          frame: animation.endFrame,
           value: end
       });
 
       // Add these keys to the animation
-      animateEnding.setKeys(keys);
+      animation.setKeys(keys);
 
       // Link the animation to the mesh
-      //self.animations.push(animateEnding);
-      enqueueAnimation(animateEnding);
+      //self.animations.push(animation);
+      enqueueAnimation(animation);
       // Run the animation !
       //var begin = scene.beginAnimation(self, 0, 30, false, 1);
       //self.animations = [];
