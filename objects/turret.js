@@ -57,7 +57,7 @@ var Turret = function(xml_node, parent) {
 ///////////////////////
 // Private Functions //
 ///////////////////////
-    function setLatLong(la, lo) { // Assume latitude is in radians (up from x-y plane), assume longitude in radians (counterclockwise from positive z)        
+    function setLatLong(la, lo) { // Assume latitude is in radians (up from x-y plane), assume longitude in radians (clockwise from positive z)        
 //        if (isFirstSet ) {
 //            lat = 0;
 //            long = 0;
@@ -65,7 +65,7 @@ var Turret = function(xml_node, parent) {
         barrel = BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
         barrel.position = new BABYLON.Vector3(0, length/2, 0);
         // Find difference between previous and current angles       
-        la = Math.PI/2 - la; // la is now in terms of down from vertical
+//        la = Math.PI/2 - la; // la is now in terms of down from vertical
 //        la = la - lat;
 //        lo = lo - long; 
         
@@ -80,10 +80,10 @@ var Turret = function(xml_node, parent) {
 //        EmptyPivot.rotate(BABYLON.Axis.X, la, BABYLON.Space.Local);
 //        EmptyPivot.rotate.x = la;
         
-        barrel.rotate(BABYLON.Axis.X, la, BABYLON.Space.Local);
+        barrel.rotate(BABYLON.Axis.X, Math.PI/2-la, BABYLON.Space.Local);
         // Return to proper place
-        barrel.position.z = barrel.position.z + length/2*(Math.sin(la));
-        barrel.position.y = barrel.position.y - length/2*(1 - Math.cos(la));
+        barrel.position.z = barrel.position.z + length/2*(Math.sin(Math.PI/2-la));
+        barrel.position.y = barrel.position.y - length/2*(1-Math.cos(Math.PI/2-la));
         // Create the hemisphere
         hemisphere = BABYLON.MeshBuilder.CreateSphere('', {diameter: 2*radius, slice: .5}, scene); 
         barrel.parent = hemisphere;
@@ -94,45 +94,32 @@ var Turret = function(xml_node, parent) {
 
         hemisphere.parent = self;  
         
-        lat = lat + la;
-        long = lo + long;
+        lat = la;
+        long = lo;
         isFirstSet = false;
     }
     
     function toRadian(a) {
         return a * Math.PI/180;
     }
-    
-    function pointAt(x2, y2, z2) {
-        var lat = 0; // TODO calculate angle once we know velocity of the ball
-        var x1 = self.position.x;
-        var z1 = self.position.z;
-        var dx = x2 - x1;
-        var dz = z2 - z1;
-        var long = 0;
-        
-        // calculate the arctan
-        long = Math.atan(dx/dz);
-        
-        if (dz < 0) {
-            // Add pi to angle
-            long += Math.PI;
-        }
-//        console.log("long is " + long);
-        
-        // Get lattitude by atan(dy/dx)
-        var dy = y2 - self.position.y;
-//        console.log("dy is " + dy);
-        var lat = 0; // projection onto xz plane
-//        console.log("dx is " + dx + " dz is " + dz);
-        var xzComp = Math.sqrt(dx*dx + dz*dz);
-//        console.log("xzComp is " + xzComp);
-        lat = Math.atan(dy/xzComp);
-       
-        
-//        console.log("lat is " + lat);
-        self.setAngles(lat, long);        
+
+    // Point at the point (x,y,z) in absolute coordinates NOT the direction.
+    function pointAt(x,y,z) {
+	dx = x-self.getAbsolutePosition().x;
+	dy = y-self.getAbsolutePosition().y;
+	dz = z-self.getAbsolutePosition().z;
+	console.log(self.getAbsolutePosition());
+	
+	var lo = Math.atan(dx/dz);
+	if(dz < 0)
+	    lo += Math.PI;
+	
+	var xzComp = Math.sqrt(dx*dx + dz*dz);
+	var la = Math.atan(dy/xzComp);
+	self.setAngles(la,lo-self.parent.getAngle());
     }
+    
+
 //////////////////////
 // Public Functions //
 //////////////////////
@@ -162,41 +149,32 @@ var Turret = function(xml_node, parent) {
     }
     
     self.aim = function(mesh) {
-        console.log(mesh);
-        if (mesh != null) {
-            var mx = mesh.position.x;
-            var my = mesh.position.y;
-            var mz = mesh.position.z;
-        
-            pointAt(mx, my, mz);
-        } else {
-            console.error("mesh is null!!!");
-        }
+	var dir = mesh.getAbsolutePosition();//.subtract(self.getAbsolutePosition());
+	pointAt(dir.x,dir.y,dir.z);
     }
     
     self.setAngles = function (la, lo) {        
         hemisphere.dispose();
         barrel.dispose();
-        
         setLatLong(la, lo);
     }
     
     self.FIRE = function() {
+	gLong = long + self.parent.getAngle(); // the "global longitude"
         // Throw a ball
-        sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, .5, scene);
-//        console.log(sphere);
-        sphere.position.y = barrel.position.y + 1;
-        sphere.position.x = barrel.position.x;
-        sphere.position.z = barrel.position.z;
+        sphere = BABYLON.Mesh.CreateSphere("cannon_ball", 16, .5, scene);
+	var muzzleDir = new BABYLON.Vector3(Math.cos(lat)*Math.sin(gLong),
+					    Math.sin(lat),
+					    Math.cos(lat)*Math.cos(gLong));
+	sphere.position = barrel.getAbsolutePosition().add(muzzleDir.scale(length/2));
         sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
-//        sphere.isPickable = true;
         var scale = 50;
-        var vx = ~~Math.round(- scale * Math.cos(lat) * Math.sin(long));
+        var vx = ~~Math.round( scale * Math.cos(lat) * Math.sin(gLong));
         var vy = ~~Math.round(scale * Math.sin(lat));
-        var vz = ~~Math.round(- scale * Math.cos(lat) * Math.cos(long));
+        var vz = ~~Math.round( scale * Math.cos(lat) * Math.cos(gLong));
         
         var vector = new BABYLON.Vector3(vx, vy, vz);
-        sphere.applyImpulse(vector,sphere.getAbsolutePosition());
+        sphere.applyImpulse(muzzleDir.scale(scale),sphere.getAbsolutePosition());
         
     }
     

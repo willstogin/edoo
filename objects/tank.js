@@ -18,6 +18,7 @@ var Tank = function(xml_node,parent) {
     // Attributes not accessible by xml
     var angle = 0;
     var rotationQuaternion;
+    var position;
 
     if (n.hasAttribute('id')) {
 	id = n.getAttribute('id');
@@ -53,7 +54,7 @@ var Tank = function(xml_node,parent) {
     for (var i=0; i<n.children.length; i++) {
 	var obj = createObjectForXmlNode(n.children[i]);
         if (obj.getType() == "turret") {
-            obj.position = new BABYLON.Vector3(0, 1/2, 0);
+            obj.position = new BABYLON.Vector3(0, 0.5, 0);
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
@@ -76,7 +77,7 @@ var Tank = function(xml_node,parent) {
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
-    var position = self.position.clone();
+    position = self.position.clone();
     rotationQuaternion = BABYLON.Quaternion.Identity();
 
 //    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
@@ -123,7 +124,15 @@ var Tank = function(xml_node,parent) {
 //////////////////////
 // Public Functions //
 //////////////////////
-    
+
+/*
+    self.getPosition = function() {
+	return position.clone();
+    }
+*/
+    self.getAngle = function() {
+	return angle;
+    }
 
     self.getType = function() {
 	return "tank";
@@ -149,7 +158,7 @@ var Tank = function(xml_node,parent) {
             frame: animation.endFrame,
             value: position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
 	});
-
+	
 	position.addInPlace(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)));
 
 	animation.setKeys(keys);
