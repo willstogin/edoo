@@ -14,8 +14,15 @@ var Tank = function(xml_node,parent) {
     var x = 0;
     var y = height/2;
     var z = 0;
-    var lastPosition = 0;
-    var zAnimation = new BABYLON.Animation("tankZAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var lastZPosition = 0, lastXPosition = 0;
+    var lastRotation = 0;
+    var zPositionAnimation = new BABYLON.Animation("tankzPositionAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var xPositionAnimation = new BABYLON.Animation("tankxPositionAnimation", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var zRotationAnimation = new BABYLON.Animation("tankzRotationAnimation", "rotation.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+    //Attributes not accessible by xml
+    var angle = 0;
+    var rotationQuaternion;
+
     if (n.hasAttribute('id')) {
 	id = n.getAttribute('id');
     } else {
@@ -53,7 +60,7 @@ var Tank = function(xml_node,parent) {
 	   var obj = createObjectForXmlNode(n.children[i]);
 
         if (obj.getType() == "turret") {
-            obj.position = new BABYLON.Vector3(0, height/4, 0);
+            obj.position = new BABYLON.Vector3(0, 1/2, 0);
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
@@ -74,6 +81,9 @@ var Tank = function(xml_node,parent) {
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
+    var position = self.position.clone();
+    rotationQuaternion = BABYLON.Quaternion.Identity();
+
     self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
@@ -85,6 +95,33 @@ var Tank = function(xml_node,parent) {
 ///////////////////////
 // Private Functions //
 ///////////////////////
+
+var animationQueue = [];
+var animating = false;
+
+function enqueueAnimation(animation) {
+    if (animating) {
+      animationQueue.push(animation);
+    } else {
+      runAnimation(animation);
+    }
+}
+
+function doNextAnimation() {
+    if(animationQueue.length > 0) {
+        var animation = animationQueue.shift();
+        runAnimation(animation);
+    } else {
+      animating = false;
+    }
+}
+
+function runAnimation(animation) {
+  animating = true;
+  self.animations.push(animation);
+  scene.beginAnimation(self, 0, 30, false, 1, doNextAnimation);
+  self.animations = [];
+}
 
 //////////////////////
 // Public Functions //
@@ -102,20 +139,95 @@ var Tank = function(xml_node,parent) {
 	return id;
     }
 
-    self.moveZ = function(distance) {
+
+    self.move = function(dist) {
+      var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+      console.log(angle);
+
       var keys = [];
       keys.push({
         frame: 0,
-        value: lastPosition
+        value: position.clone()
       });
       keys.push({
         frame: 30,
-        value: lastPosition + distance
+        value: position.add(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)))
       });
-      lastPosition = lastPosition + distance;
-      zAnimation.setKeys(keys);
+
+      position.addInPlace(new BABYLON.Vector3(dist*Math.sin(angle),0,dist*Math.cos(angle)));
+
+      animation.setKeys(keys);
+      enqueueAnimation(animation);
+    }
+
+    self.mov = function(dist) {
+      var xAnimation = new BABYLON.Animation("mov", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+      var zAnimation = new BABYLON.Animation("mov", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+      console.log(angle);
+      var xKeys = [];
+      xKeys.push({
+        frame: 0,
+        value: self.position.x
+      });
+      xKeys.push({
+        frame: 30,
+        value: self.position.x + dist * Math.sin(angle)
+      });
+      var zKeys =[];
+      zKeys.push({
+        frame: 0,
+        value: self.position.z
+      });
+      zKeys.push({
+        frame: 30,
+        value: self.position.z + dist * Math.cos(angle)
+      });
+
+      xAnimation.setKeys(xKeys);
+      zAnimation.setKeys(zKeys);
+      self.animations.push(xAnimation);
       self.animations.push(zAnimation);
-      scene.beginAnimation(self, 0, 30, true);
+      var begin = scene.beginAnimation(self, 0, 30, true);
+      self.animations = [];
+    }
+
+    self.rotate = function(degrees) {
+      var radians = degrees * Math.PI/180;
+      angle += radians;
+      var deltaRotationQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, radians);
+      var end = rotationQuaternion.multiply(deltaRotationQuaternion);
+
+      var start = rotationQuaternion;
+      rotationQuaternion = end.clone();
+
+      // Create the Animation object
+      var animateEnding = new BABYLON.Animation(
+          "moveY",
+          "rotationQuaternion",
+          30,
+          BABYLON.Animation.ANIMATIONTYPE_QUATERNION,
+          BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+
+      // Animations keys
+      var keys = [];
+      keys.push({
+          frame: 0,
+          value: start
+      },{
+          frame: 30,
+          value: end
+      });
+
+      // Add these keys to the animation
+      animateEnding.setKeys(keys);
+
+      // Link the animation to the mesh
+      //self.animations.push(animateEnding);
+      enqueueAnimation(animateEnding);
+      // Run the animation !
+      //var begin = scene.beginAnimation(self, 0, 30, false, 1);
+      //self.animations = [];
+      //self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
     }
 
     return self;

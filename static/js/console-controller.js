@@ -6,12 +6,18 @@ var controller = container.console({
     else return true;
   },
   commandHandle:function(line){
-      result = eval(line);
-      if (result == undefined)
-	  return [{msg:"", className:"jquery-console-message-value"}];
-      return [{msg:""+result,
-	       className:"jquery-console-message-value"
-	      }];
+      try {
+	  var result = window.eval(line);
+	  if (result == undefined)
+	      return [{msg:"", className:"jquery-console-message-value"}];
+	  return [{msg:""+result,
+		   className:"jquery-console-message-value"
+		  }];
+      } catch(err) {
+	  return [{msg:""+err,
+		   className:"jquery-console-message-error"
+		  }];
+      }
   },
   autofocus:true,
   animateScroll:true,
@@ -22,3 +28,9 @@ var controller = container.console({
      return true;
   }
 });
+
+// Define a print function to allow printing to terminal.
+function print(text) {
+    controller.report(text,"jquery-console-message-type");
+}
+console.log(controller);
