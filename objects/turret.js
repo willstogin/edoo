@@ -11,6 +11,7 @@ var Turret = function(xml_node, parent) {
     var radius = 1;
     var lat = 45;
     var long = 0;
+    var isFirstSet = true;
     
     if (n.hasAttribute('id')) {
         id = n.getAttribute('id');
@@ -39,7 +40,9 @@ var Turret = function(xml_node, parent) {
      var hemisphere = BABYLON.MeshBuilder.CreateSphere('', {diameter: 2*radius, slice: .5}, scene);   
     
     // Create the cylinder
-	var barrel;
+	var barrel = BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
+        barrel.position = new BABYLON.Vector3(0, length/2, 0);
+    
     setLatLong(lat, long);
     
     hemisphere.parent = self;    
@@ -57,21 +60,31 @@ var Turret = function(xml_node, parent) {
 ///////////////////////
 // Private Functions //
 ///////////////////////
-    function setLatLong(la, lo) { // Assume latitude is in radians (up from x-y plane), assume longitude in radians (counterclockwise from positive z)
-        // point barrel straight up
-        barrel = BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);//BABYLON.Mesh.CreateBox("barrelBox", 5, scene); //BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
-        barrel.position = new BABYLON.Vector3(0, length/2, 0);
-        la = Math.PI/2 - la; // la is now in terms of down from vertical
+    function setLatLong(la, lo) { // Assume latitude is in radians (up from x-y plane), assume longitude in radians (counterclockwise from positive z)        
+        if (isFirstSet) {
+            lat = 0;
+            long = 0;
+        }
         
+        // Find difference between previous and current angles
+        la = la - lat;
+        lo = lo - long;
+        
+        
+        la = Math.PI/2 - la; // la is now in terms of down from vertical
         // Rotate forward
         barrel.rotate(BABYLON.Axis.X, la, BABYLON.Space.Local);
         // Return to proper place
         barrel.position.z = barrel.position.z + length/2*(Math.sin(la));
         barrel.position.y = barrel.position.y - length/2*(1 - Math.cos(la));
         
-        var projection = length * Math.cos(lat);
+        var projection = length * Math.cos(la);
         hemisphere.rotate(BABYLON.Axis.Y, lo, BABYLON.Space.Local);
         barrel.parent = hemisphere;
+        
+        lat = lat + la;
+        long = lo + long;
+        isFirstSet = false;
     }
     
     function toRadian(a) {
@@ -107,7 +120,7 @@ var Turret = function(xml_node, parent) {
     }
     
     self.setAngles = function (la, lo) {        
-        barrel.dispose();
+        //barrel.dispose();
         
         setLatLong(la, lo);
     }

@@ -148,15 +148,13 @@ function runAnimation(animation) {
         
         // Get lattitude by atan(dy/dx)
         var dy = y2 - self.position.y;
+        console.log("dy is " + dy);
         var lat = 0; // projection onto xz plane
         console.log("dx is " + dx + " dz is " + dz);
         var xzComp = Math.sqrt(dx*dx + dz*dz);
         console.log("xzComp is " + xzComp);
         lat = Math.atan(dy/xzComp);
-        
-       // if (dy < 0) {
-         //   lat = -lat;
-        //}
+       
         
         console.log("lat is " + lat);
         turret.setAngles(lat, long);        
