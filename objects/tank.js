@@ -19,6 +19,8 @@ var Tank = function(xml_node,parent) {
     var zPositionAnimation = new BABYLON.Animation("tankzPositionAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     var xPositionAnimation = new BABYLON.Animation("tankxPositionAnimation", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     var zRotationAnimation = new BABYLON.Animation("tankzRotationAnimation", "rotation.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+    //Attributes not accessible by xml
+    var angle = 0;
 
 
     if (n.hasAttribute('id')) {
@@ -58,7 +60,7 @@ var Tank = function(xml_node,parent) {
 	   var obj = createObjectForXmlNode(n.children[i]);
 
         if (obj.getType() == "turret") {
-            obj.position = new BABYLON.Vector3(0, height/4, 0);
+            obj.position = new BABYLON.Vector3(0, 1/2, 0);
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
@@ -107,58 +109,73 @@ var Tank = function(xml_node,parent) {
 	return id;
     }
 
-    self.moveZ = function(distance) {
-      var keys = [];
-      keys.push({
+
+    self.move = function(dist) {
+      var xAnimation = new BABYLON.Animation("mov", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+      var zAnimation = new BABYLON.Animation("mov", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+      console.log(angle);
+      var xKeys = [];
+      xKeys.push({
         frame: 0,
-        value: lastZPosition
+        value: self.position.x
       });
-      keys.push({
+      xKeys.push({
         frame: 30,
-        value: lastZPosition + distance
+        value: self.position.x + dist * Math.sin(angle)
       });
-      lastZPosition = lastZPosition + distance;
-      zPositionAnimation.setKeys(keys);
-      self.animations.push(zPositionAnimation);
+      var zKeys =[];
+      zKeys.push({
+        frame: 0,
+        value: self.position.z
+      });
+      zKeys.push({
+        frame: 30,
+        value: self.position.z + dist * Math.cos(angle)
+      });
+
+      xAnimation.setKeys(xKeys);
+      zAnimation.setKeys(zKeys);
+      self.animations.push(xAnimation);
+      self.animations.push(zAnimation);
       scene.beginAnimation(self, 0, 30, true);
       self.animations = [];
     }
 
-    self.moveX = function(distance) {
-      var keys = [];
-      keys.push({
-        frame: 0,
-        value: lastXPosition
-      });
-      keys.push({
-        frame: 30,
-        value: lastXPosition + distance
-      });
-      lastXPosition = lastXPosition + distance;
-      xPositionAnimation.setKeys(keys);
-      self.animations.push(xPositionAnimation);
-      scene.beginAnimation(self, 0, 30, true);
-      self.animations = [];
-    }
+    self.rotate = function(radians) {
+      angle += radians;
+      var rotationQuaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, radians);
+      var end = self.rotationQuaternion.multiply(rotationQuaternion);
 
-    self.rotateZ = function(degrees) {
-      self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
-      //self.rotation.y += degrees;
-      /*
+      var start = self.rotationQuaternion;
+
+      // Create the Animation object
+      var animateEnding = new BABYLON.Animation(
+          "moveY",
+          "rotationQuaternion",
+          30,
+          BABYLON.Animation.ANIMATIONTYPE_QUATERNION,
+          BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+
+      // Animations keys
       var keys = [];
       keys.push({
-        frame: 0,
-        value: lastRotation
+          frame: 0,
+          value: start
+      },{
+          frame: 30,
+          value: end
       });
-      keys.push({
-        frame: 30,
-        value: lastRotation + degrees
-      });
-      lastRotation = lastRotation + degrees;
-      zRotationAnimation.setKeys(keys);
-      self.animations.push(zRotationAnimation);
-      scene.beginAnimation(self, 0, 30, true);
-      */
+
+      // Add these keys to the animation
+      animateEnding.setKeys(keys);
+
+      // Link the animation to the mesh
+      self.animations.push(animateEnding);
+
+      // Run the animation !
+      scene.beginAnimation(self, 0, 30, false, 1);
+      self.animations = [];
+      //self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
     }
 
     return self;
