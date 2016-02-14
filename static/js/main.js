@@ -126,13 +126,14 @@ var createScene = function () {
     shadowGenerator.getShadowMap().renderList.push(box6);
 //    OBJECTS.push(box6);
 
-/*
+
     scene.onPointerDown = function (evt, pickResult) {
         // Get the picked id
         if (pickResult.hit) {
             console.log(pickResult.pickedMesh.id);
         }
         
+        /*
         // Throw a ball
         var startPosn = scene.activeCamera.position;
         sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
@@ -147,9 +148,9 @@ var createScene = function () {
         shadowGenerator.getShadowMap().renderList.push(sphere);
         
         // Add sphere to the list of objects
-        OBJECTS.push(sphere);    
+        OBJECTS.push(sphere);    */
     }
-*/
+
     
     return scene;
 }
