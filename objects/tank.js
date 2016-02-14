@@ -1,16 +1,17 @@
 
-var Block = function(xml_node,parent) {
+var Tank = function(xml_node,parent) {
     var n = xml_node;
 
 /////////////////
 // Constructor //
 /////////////////
 
-    var length = 1;
+    // Attributes possibly from xml
+    var length = 1.5;
     var width = 1;
     var height = 0.5;
     var x = 0;
-    var y = 0;
+    var y = height/2;
     var z = 0;
     var id = "";
 

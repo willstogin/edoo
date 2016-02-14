@@ -1,7 +1,8 @@
 
 
 object_classes = {
-    "block": Block
+    "block": Block,
+    "tank": Tank
 }
 
 
