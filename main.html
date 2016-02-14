@@ -99,7 +99,14 @@
     myTank.move(1);
     myTank.rotate(-20);
   }
-}</textarea>
+}
+
+// Click an object on the scene and pass it as an argument to this method.
+function shootObject(obj) {
+  myTank.turret.aim(obj);
+  myTank.turret.FIRE();
+}
+</textarea>
           </div>
         </div>
         <div id="handle-vertical"></div>
