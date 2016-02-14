@@ -22,11 +22,11 @@ var Tank = function(xml_node,parent) {
     }
 
     if (n.hasAttribute('length'))
-	size = n.getAttribute('length');
+	length = n.getAttribute('length');
     if (n.hasAttribute('width'))
-	size = n.getAttribute('width');
+	width = n.getAttribute('width');
     if (n.hasAttribute('height'))
-	size = n.getAttribute('height');
+	height = n.getAttribute('height');
     if (n.hasAttribute('x'))
 	x = n.getAttribute('x');
     if (n.hasAttribute('y'))
@@ -40,6 +40,9 @@ var Tank = function(xml_node,parent) {
     self.scaling.z = length;
 
     var wheels = BABYLON.Mesh.CreateBox(id+"_wheels",0,scene);
+    wheels.scaling.x = 1/width;
+    wheels.scaling.y = 1/height;
+    wheels.scaling.z = 1/length;
     wheels.isVisible = false;
     var maxWheelRadius = 0;
     for (var i=0; i<n.children.length; i++) {
