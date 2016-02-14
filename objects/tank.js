@@ -46,12 +46,12 @@ var Tank = function(xml_node,parent) {
     wheels.scaling.z = 1/length;
     wheels.isVisible = false;
     var maxWheelRadius = 0;
-    
 
-    
+
+
     for (var i=0; i<n.children.length; i++) {
 	   var obj = createObjectForXmlNode(n.children[i]);
-      
+
         if (obj.getType() == "turret") {
             obj.position = new BABYLON.Vector3(0, height/4, 0);
             obj.scaling.x = 1/width;
@@ -113,7 +113,7 @@ var Tank = function(xml_node,parent) {
         value: lastPosition + distance
       });
       lastPosition = lastPosition + distance;
-      animationBox.setKeys(keys);
+      zAnimation.setKeys(keys);
       self.animations.push(zAnimation);
       scene.beginAnimation(self, 0, 30, true);
     }
