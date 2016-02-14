@@ -167,7 +167,7 @@ var Turret = function(xml_node, parent) {
 					    Math.sin(lat),
 					    Math.cos(lat)*Math.cos(gLong));
 	sphere.position = barrel.getAbsolutePosition().add(muzzleDir.scale(length/2));
-        sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
+        sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 100, restitution: .5});
         var scale = 50;
         var vx = ~~Math.round( scale * Math.cos(lat) * Math.sin(gLong));
         var vy = ~~Math.round(scale * Math.sin(lat));
