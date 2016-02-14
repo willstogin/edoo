@@ -93,33 +93,33 @@ var Tank = function(xml_node,parent) {
 // Private Functions //
 ///////////////////////
 
-var animationQueue = [];
-var animating = false;
+    var animationQueue = [];
+    var currentAnimation;
 
-function enqueueAnimation(animation) {
-    if (animating) {
-      animationQueue.push(animation);
-    } else {
-      runAnimation(animation);
+    function enqueueAnimation(animation) {
+	if (currentAnimation != null) {
+	    animationQueue.push(animation);
+	} else {
+	    runAnimation(animation);
+	}
     }
-}
 
-function doNextAnimation() {
-    if(animationQueue.length > 0) {
-        var animation = animationQueue.shift();
-        runAnimation(animation);
-    } else {
-      animating = false;
+    function doNextAnimation() {
+	if(animationQueue.length > 0) {
+            var animation = animationQueue.shift();
+            runAnimation(animation);
+	} else {
+	    currentAnimation = null;
+	}
     }
-}
 
-function runAnimation(animation) {
-  animating = true;
-  self.animations.push(animation);
-  scene.beginAnimation(self, 0, animation.endFrame, false, 1, doNextAnimation);
-  self.animations = [];
-}
-
+    function runAnimation(animation) {
+	currentAnimation = animation;
+	self.animations.push(animation);
+	scene.beginAnimation(self, 0, animation.endFrame, false, 1, doNextAnimation);
+	self.animations = [];
+    }
+    
 //////////////////////
 // Public Functions //
 //////////////////////
@@ -135,10 +135,6 @@ function runAnimation(animation) {
 
     self.getId = function() {
 	return id;
-    }
-
-    self.stop = function(){
-      animationQueue = [];
     }
 
     self.move = function(dist) {
