@@ -125,8 +125,7 @@ var createScene = function () {
     box6.isPickable = true;
     shadowGenerator.getShadowMap().renderList.push(box6);
 //    OBJECTS.push(box6);
-    
-    
+
 /*
     scene.onPointerDown = function (evt, pickResult) {
         var startPosn = scene.activeCamera.position;
@@ -173,6 +172,8 @@ canvas.addEventListener('click', function(evt) {
 	pickResult.pickedMesh.applyImpulse(new BABYLON.Vector3(0, 0, 1000),
 					   pickResult.pickedPoint);
 */
+        console.log(pickResult.pickedMesh.id);
+//        if (pickResult.pickedMesh.getId == "") 
     }
 });
 
