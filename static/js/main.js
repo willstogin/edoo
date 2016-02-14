@@ -126,7 +126,6 @@ var createScene = function () {
     shadowGenerator.getShadowMap().renderList.push(box6);
 //    OBJECTS.push(box6);
     
-    
     scene.onPointerDown = function (evt, pickResult) {
         var startPosn = scene.activeCamera.position;
         sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
