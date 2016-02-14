@@ -14,8 +14,13 @@ var Tank = function(xml_node,parent) {
     var x = 0;
     var y = height/2;
     var z = 0;
-    var lastPosition = 0;
-    var zAnimation = new BABYLON.Animation("tankZAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var lastZPosition = 0, lastXPosition = 0;
+    var lastRotation = 0;
+    var zPositionAnimation = new BABYLON.Animation("tankzPositionAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var xPositionAnimation = new BABYLON.Animation("tankxPositionAnimation", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    var zRotationAnimation = new BABYLON.Animation("tankzRotationAnimation", "rotation.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+
+
     if (n.hasAttribute('id')) {
 	id = n.getAttribute('id');
     } else {
@@ -106,16 +111,54 @@ var Tank = function(xml_node,parent) {
       var keys = [];
       keys.push({
         frame: 0,
-        value: lastPosition
+        value: lastZPosition
       });
       keys.push({
         frame: 30,
-        value: lastPosition + distance
+        value: lastZPosition + distance
       });
-      lastPosition = lastPosition + distance;
-      zAnimation.setKeys(keys);
-      self.animations.push(zAnimation);
+      lastZPosition = lastZPosition + distance;
+      zPositionAnimation.setKeys(keys);
+      self.animations.push(zPositionAnimation);
       scene.beginAnimation(self, 0, 30, true);
+      self.animations = [];
+    }
+
+    self.moveX = function(distance) {
+      var keys = [];
+      keys.push({
+        frame: 0,
+        value: lastXPosition
+      });
+      keys.push({
+        frame: 30,
+        value: lastXPosition + distance
+      });
+      lastXPosition = lastXPosition + distance;
+      xPositionAnimation.setKeys(keys);
+      self.animations.push(xPositionAnimation);
+      scene.beginAnimation(self, 0, 30, true);
+      self.animations = [];
+    }
+
+    self.rotateZ = function(degrees) {
+      self.rotate(BABYLON.Axis.Y, degrees, BABYLON.Space.LOCAL);
+      //self.rotation.y += degrees;
+      /*
+      var keys = [];
+      keys.push({
+        frame: 0,
+        value: lastRotation
+      });
+      keys.push({
+        frame: 30,
+        value: lastRotation + degrees
+      });
+      lastRotation = lastRotation + degrees;
+      zRotationAnimation.setKeys(keys);
+      self.animations.push(zRotationAnimation);
+      scene.beginAnimation(self, 0, 30, true);
+      */
     }
 
     return self;
