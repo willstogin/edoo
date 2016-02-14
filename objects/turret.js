@@ -9,7 +9,8 @@ var Turret = function(xml_node, parent) {
     // From xml
     var id;
     var radius = 1;
-    var angle = 45;
+    var lat = 45;
+    var long = 0;
     
     if (n.hasAttribute('id')) {
         id = n.getAttribute('id');
@@ -19,10 +20,13 @@ var Turret = function(xml_node, parent) {
     
     if (n.hasAttribute('radius'))
         radius = n.getAttribute('radius');
-    if (n.hasAttribute('angle')) 
-        angle = n.getAttribute('angle');
-    // Set angle to radians
-    angle = angle * Math.PI/180;
+    if (n.hasAttribute('lat')) 
+        lat = n.getAttribute('lat');
+    if (n.hasAttribute('long'))
+        long = n.getAttribute('long');
+    // Set angles to radians
+    lat = lat * Math.PI/180;
+    long = long *Math.PI/180;
     
     var length = radius * 3;
     if(n.hasAttribute('length'))
@@ -35,17 +39,10 @@ var Turret = function(xml_node, parent) {
      var hemisphere = BABYLON.MeshBuilder.CreateSphere('', {diameter: 2*radius, slice: .5}, scene);   
     
     // Create the cylinder
-	var barrel = BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
-    barrel.position = new BABYLON.Vector3(0, length/2, 0);
-    // Rotate forward
-    barrel.rotate(BABYLON.Axis.X, angle, BABYLON.Space.Local);
-    // Return to proper place
-    barrel.position.z = barrel.position.z + length/2*(Math.sin(angle));
-    barrel.position.y = barrel.position.y - length/2*(1 - Math.cos(angle));
+	var barrel;
+    setLatLong(lat, long);
     
-    // Attach to parent
-    hemisphere.parent = self;
-    barrel.parent = self;
+    hemisphere.parent = self;    
     
     // Add physics
     hemisphere.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
@@ -59,6 +56,22 @@ var Turret = function(xml_node, parent) {
 ///////////////////////
 // Private Functions //
 ///////////////////////
+    function setLatLong(la, lo) { // Assume latitude is in radians (up from x-y plane), assume longitude in radians (counterclockwise from positive z)
+        // point barrel straight up
+        barrel = BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);//BABYLON.Mesh.CreateBox("barrelBox", 5, scene); //BABYLON.Mesh.CreateCylinder("",length,radius/4, radius/4, 0, 0,scene, false, BABYLON.Mesh.DOUBLESIDE);
+        barrel.position = new BABYLON.Vector3(0, length/2, 0);
+        la = Math.PI/2 - la; // la is now in terms of down from vertical
+        
+        // Rotate forward
+        barrel.rotate(BABYLON.Axis.X, la, BABYLON.Space.Local);
+        // Return to proper place
+        barrel.position.z = barrel.position.z + length/2*(Math.sin(la));
+        barrel.position.y = barrel.position.y - length/2*(1 - Math.cos(la));
+        
+        var projection = length * Math.cos(lat);
+        hemisphere.rotate(BABYLON.Axis.Y, lo, BABYLON.Space.Local);
+        barrel.parent = hemisphere;
+    }
 
 //////////////////////
 // Public Functions //
