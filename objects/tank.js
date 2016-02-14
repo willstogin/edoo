@@ -116,7 +116,7 @@ function doNextAnimation() {
 function runAnimation(animation) {
   animating = true;
   self.animations.push(animation);
-  scene.beginAnimation(self, 0, 30, true, 1, doNextAnimation);
+  scene.beginAnimation(self, 0, 30, false, 1, doNextAnimation);
   self.animations = [];
 }
 
