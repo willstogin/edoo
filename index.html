@@ -90,8 +90,8 @@
           </div>
           <div id="handle-horizontal-left"></div>
           <div class="col-md-12" id="js-container">
-              <textarea id="javascript" class="lined-text-area">function onEventFired() {
-
+              <textarea id="javascript" class="lined-text-area">function f() {
+    return "hi";
 }</textarea>
           </div>
         </div>
@@ -120,8 +120,7 @@
 
      <!-- Include the parsers -->
      <script src="xml_parser/parser.js"></script>
-<!--     <script src="js_parser/worker.js"></script>
-     <script src="js_parser/parser.js"></script> -->
+     <script src="js_parser/parser.js"></script>
      <!-- Include the objects -->
      <script src="objects/block.js"></script>
      <script src="objects/tank.js"></script>
@@ -145,7 +144,7 @@
        theme : 'base16-dark',
        mode : 'javascript'
      });
-     jsCodeMirror.on("blur",function() { console.log("blur"); });
+     jsCodeMirror.on("blur",executeJSTextArea);
 
      </script>
 
