@@ -79,8 +79,8 @@ var Tank = function(xml_node,parent) {
     var position = self.position.clone();
     rotationQuaternion = BABYLON.Quaternion.Identity();
 
-    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
-    self.showBoundingBox = true;
+//    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
+//    self.showBoundingBox = true;
 
 
     // Define references to this object.

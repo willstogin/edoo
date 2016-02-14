@@ -45,7 +45,7 @@ var Turret = function(xml_node, parent) {
       
     
     // Add physics
-    hemisphere.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
+//    hemisphere.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
     
     // Define references to this object.
     window[id] = self;
@@ -191,16 +191,12 @@ var Turret = function(xml_node, parent) {
         sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
 //        sphere.isPickable = true;
         var scale = 50;
-        var vx = ~~Math.round(scale * Math.cos(lat));
+        var vx = ~~Math.round(- scale * Math.cos(lat) * Math.sin(long));
         var vy = ~~Math.round(scale * Math.sin(lat));
-        var vz = ~~Math.round(scale * Math.cos(long));
+        var vz = ~~Math.round(- scale * Math.cos(lat) * Math.cos(long));
         
-        if (barrel.position.x < self.position.x)
-            vx = -vx;
-        console.log("x " + vx + " y " + vy + " vz " + vz);
         var vector = new BABYLON.Vector3(vx, vy, vz);
-        sphere.applyImpulse(vector,
-                            sphere.getAbsolutePosition());
+        sphere.applyImpulse(vector,sphere.getAbsolutePosition());
         
     }
     
