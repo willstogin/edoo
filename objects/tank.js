@@ -23,11 +23,11 @@ var Tank = function(xml_node,parent) {
     }
 
     if (n.hasAttribute('length'))
-	size = n.getAttribute('length');
+	length = n.getAttribute('length');
     if (n.hasAttribute('width'))
-	size = n.getAttribute('width');
+	width = n.getAttribute('width');
     if (n.hasAttribute('height'))
-	size = n.getAttribute('height');
+	height = n.getAttribute('height');
     if (n.hasAttribute('x'))
 	x = n.getAttribute('x');
     if (n.hasAttribute('y'))
@@ -41,27 +41,40 @@ var Tank = function(xml_node,parent) {
     self.scaling.z = length;
 
     var wheels = BABYLON.Mesh.CreateBox(id+"_wheels",0,scene);
+    wheels.scaling.x = 1/width;
+    wheels.scaling.y = 1/height;
+    wheels.scaling.z = 1/length;
     wheels.isVisible = false;
     var maxWheelRadius = 0;
+    
+
+    
     for (var i=0; i<n.children.length; i++) {
-	var obj = createObjectForXmlNode(n.children[i]);
-	if (obj.getType()=="wheels") {
-	    if (obj.getSide()=="left") {
-		obj.position = new BABYLON.Vector3(-width/2,0,0);
-	    } else {
-		obj.position = new BABYLON.Vector3(width/2,0,0);
-	    }
-	    if (obj.getRadius() > maxWheelRadius)
-		maxWheelRadius = obj.getRadius();
-	    obj.parent = wheels;
-	}
+	   var obj = createObjectForXmlNode(n.children[i]);
+      
+        if (obj.getType() == "turret") {
+            obj.position = new BABYLON.Vector3(0, height/4, 0);
+            obj.scaling.x = 1/width;
+            obj.scaling.y = 1/height;
+            obj.scaling.z = 1/length;
+            obj.parent = self;
+        } else if (obj.getType()=="wheels") {
+	       if (obj.getSide()=="left") {
+		      obj.position = new BABYLON.Vector3(-width/2,0,0);
+	       } else {
+		      obj.position = new BABYLON.Vector3(width/2,0,0);
+	       }
+	       if (obj.getRadius() > maxWheelRadius)
+		      maxWheelRadius = obj.getRadius();
+	       obj.parent = wheels;
+	   }
 	// TODO other children?
     }
     wheels.parent = self;
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
-//    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
+    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
     window[id] = self;

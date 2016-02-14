@@ -44,7 +44,7 @@ var Block = function(xml_node,parent) {
     material.diffuseColor = BABYLON.Color3(1,0,0);
     self.material = material;
 */
-    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
+    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: .2});
 
     // Define references to this object.
     window[id] = self;

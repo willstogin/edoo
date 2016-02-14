@@ -80,12 +80,11 @@
         <div id="left">
           <div class="col-md-12" id="xml-container">
               <textarea id="xml" class="lined-text-area">
-<block x="-.5" y=".5">
-</block>
-<block y="1.5">
-</block>
-<block x=".5" y=".5">
-</block>
+<tank id="tank" length="4">
+  <wheels side="left" count="3" radius=".75" width=".5"></wheels>
+  <wheels side="right" count="3" radius=".75" width=".5"></wheels>
+</tank>
+<block id="block" x="10"></block>
 </textarea>
           </div>
           <div id="handle-horizontal-left"></div>
@@ -122,6 +121,7 @@
      <!-- Include the objects -->
      <script src="objects/block.js"></script>
      <script src="objects/tank.js"></script>
+     <script src="objects/turret.js"></script>
      <script src="objects/wheels.js"></script>
      <script src="objects/objects.js"></script>
 
