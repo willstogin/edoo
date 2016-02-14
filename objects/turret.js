@@ -176,6 +176,11 @@ var Turret = function(xml_node, parent) {
         var vector = new BABYLON.Vector3(vx, vy, vz);
         sphere.applyImpulse(muzzleDir.scale(scale),sphere.getAbsolutePosition());
         
+	// Remove sphere after a while.
+	var delay = 5000; // in ms
+	setTimeout(function() {
+	    sphere.dispose();
+	}, delay);
     }
     
     return self;
