@@ -102,7 +102,37 @@ var Turret = function(xml_node, parent) {
     function toRadian(a) {
         return a * Math.PI/180;
     }
-
+    
+    function pointAt(x2, y2, z2) {
+        var lat = 0; // TODO calculate angle once we know velocity of the ball
+        var x1 = self.position.x;
+        var z1 = self.position.z;
+        var dx = x2 - x1;
+        var dz = z2 - z1;
+        var long = 0;
+        
+        // calculate the arctan
+        long = Math.atan(dx/dz);
+        
+        if (dz < 0) {
+            // Add pi to angle
+            long += Math.PI;
+        }
+//        console.log("long is " + long);
+        
+        // Get lattitude by atan(dy/dx)
+        var dy = y2 - self.position.y;
+//        console.log("dy is " + dy);
+        var lat = 0; // projection onto xz plane
+//        console.log("dx is " + dx + " dz is " + dz);
+        var xzComp = Math.sqrt(dx*dx + dz*dz);
+//        console.log("xzComp is " + xzComp);
+        lat = Math.atan(dy/xzComp);
+       
+        
+//        console.log("lat is " + lat);
+        self.setAngles(lat, long);        
+    }
 //////////////////////
 // Public Functions //
 //////////////////////
@@ -131,11 +161,47 @@ var Turret = function(xml_node, parent) {
         return 180/Math.PI * angle;
     }
     
+    self.aim = function(mesh) {
+        console.log(mesh);
+        if (mesh != null) {
+            var mx = mesh.position.x;
+            var my = mesh.position.y;
+            var mz = mesh.position.z;
+        
+            pointAt(mx, my, mz);
+        } else {
+            console.error("mesh is null!!!");
+        }
+    }
+    
     self.setAngles = function (la, lo) {        
         hemisphere.dispose();
         barrel.dispose();
         
         setLatLong(la, lo);
+    }
+    
+    self.FIRE = function() {
+        // Throw a ball
+        sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, .5, scene);
+//        console.log(sphere);
+        sphere.position.y = barrel.position.y + 1;
+        sphere.position.x = barrel.position.x;
+        sphere.position.z = barrel.position.z;
+        sphere.setPhysicsState({ impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1, restitution: 1});
+//        sphere.isPickable = true;
+        var scale = 50;
+        var vx = ~~Math.round(scale * Math.cos(lat));
+        var vy = ~~Math.round(scale * Math.sin(lat));
+        var vz = ~~Math.round(scale * Math.cos(long));
+        
+        if (barrel.position.x < self.position.x)
+            vx = -vx;
+        console.log("x " + vx + " y " + vy + " vz " + vz);
+        var vector = new BABYLON.Vector3(vx, vy, vz);
+        sphere.applyImpulse(vector,
+                            sphere.getAbsolutePosition());
+        
     }
     
     return self;

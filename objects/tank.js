@@ -65,8 +65,9 @@ var Tank = function(xml_node,parent) {
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
-            obj.parent = self;
+            obj.parent = self;  
             turret = obj;
+            self.turret = turret;
         } else if (obj.getType()=="wheels") {
 	       if (obj.getSide()=="left") {
 		      obj.position = new BABYLON.Vector3(-width/2,0,0);
@@ -130,36 +131,6 @@ function runAnimation(animation) {
 // Public Functions //
 //////////////////////
     
-    self.pointAt = function(x2, y2, z2) {
-        var lat = 0; // TODO calculate angle once we know velocity of the ball
-        var x1 = self.position.x;
-        var z1 = self.position.z;
-        var dx = x2 - x1;
-        var dz = z2 - z1;
-        var long = 0;
-        
-        // calculate the arctan
-        long = Math.atan(dx/dz);
-        
-        if (dz < 0) {
-            // Add pi to angle
-            long += Math.PI;
-        }
-        console.log("long is " + long);
-        
-        // Get lattitude by atan(dy/dx)
-        var dy = y2 - self.position.y;
-        console.log("dy is " + dy);
-        var lat = 0; // projection onto xz plane
-        console.log("dx is " + dx + " dz is " + dz);
-        var xzComp = Math.sqrt(dx*dx + dz*dz);
-        console.log("xzComp is " + xzComp);
-        lat = Math.atan(dy/xzComp);
-       
-        
-        console.log("lat is " + lat);
-        turret.setAngles(lat, long);        
-    }
 
     self.getType = function() {
 	return "tank";
