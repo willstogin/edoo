@@ -25,8 +25,8 @@ var Turret = function(xml_node, parent) {
     if (n.hasAttribute('long'))
         long = n.getAttribute('long');
     // Set angles to radians
-    lat = lat * Math.PI/180;
-    long = long *Math.PI/180;
+    lat = toRadian(lat);
+    long = toRadian(long);
     
     var length = radius * 3;
     if(n.hasAttribute('length'))
@@ -53,6 +53,7 @@ var Turret = function(xml_node, parent) {
         parent[id] = self;
     }
     
+    
 ///////////////////////
 // Private Functions //
 ///////////////////////
@@ -71,6 +72,10 @@ var Turret = function(xml_node, parent) {
         var projection = length * Math.cos(lat);
         hemisphere.rotate(BABYLON.Axis.Y, lo, BABYLON.Space.Local);
         barrel.parent = hemisphere;
+    }
+    
+    function toRadian(a) {
+        return a * Math.PI/180;
     }
 
 //////////////////////
@@ -100,5 +105,12 @@ var Turret = function(xml_node, parent) {
     self.getAngle = function() {
         return 180/Math.PI * angle;
     }
+    
+    self.setAngles = function (la, lo) {        
+        barrel.dispose();
+        
+        setLatLong(la, lo);
+    }
+    
     return self;
 }
