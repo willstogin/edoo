@@ -53,7 +53,7 @@ var Tank = function(xml_node,parent) {
 	   var obj = createObjectForXmlNode(n.children[i]);
 
         if (obj.getType() == "turret") {
-            obj.position = new BABYLON.Vector3(0, height/2, 0);
+            obj.position = new BABYLON.Vector3(0, 1/2, 0);
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
