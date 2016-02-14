@@ -80,20 +80,21 @@
         <div id="left">
           <div class="col-md-12" id="xml-container">
               <textarea id="xml" class="lined-text-area">
-<tank id="tank" length="4">
+<tank id="myTank" length="4">
   <turret></turret>
   <wheels side="left" count="3" radius=".75" width=".5"></wheels>
   <wheels side="right" count="3" radius=".75" width=".5"></wheels>
 </tank>
-<block id="block" x="10"></block>
+
+<block id="myBlock" x="10"></block>
 </textarea>
           </div>
           <div id="handle-horizontal-left"></div>
           <div class="col-md-12" id="js-container">
               <textarea id="javascript" class="lined-text-area">function circle() {
   for(var i = 0; i < 18; i++) {
-    tank.move(3);
-    tank.rotate(20);
+    myTank.move(1);
+    myTank.rotate(-20);
   }
 }</textarea>
           </div>
@@ -149,7 +150,7 @@
      });
      jsCodeMirror.on("blur",executeJSTextArea);
 
+     $(document).ready(parseXmlTextArea);
      </script>
-
 
 </body>
