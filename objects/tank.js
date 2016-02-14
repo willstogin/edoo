@@ -15,12 +15,7 @@ var Tank = function(xml_node,parent) {
     var x = 0;
     var y = height/2;
     var z = 0;
-    var lastZPosition = 0, lastXPosition = 0;
-    var lastRotation = 0;
-    var zPositionAnimation = new BABYLON.Animation("tankzPositionAnimation", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    var xPositionAnimation = new BABYLON.Animation("tankxPositionAnimation", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    var zRotationAnimation = new BABYLON.Animation("tankzRotationAnimation", "rotation.z", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-    //Attributes not accessible by xml
+    // Attributes not accessible by xml
     var angle = 0;
     var rotationQuaternion;
 
@@ -53,13 +48,10 @@ var Tank = function(xml_node,parent) {
     wheels.scaling.y = 1/height;
     wheels.scaling.z = 1/length;
     wheels.isVisible = false;
+
     var maxWheelRadius = 0;
-
-
-
     for (var i=0; i<n.children.length; i++) {
-	   var obj = createObjectForXmlNode(n.children[i]);
-
+	var obj = createObjectForXmlNode(n.children[i]);
         if (obj.getType() == "turret") {
             obj.position = new BABYLON.Vector3(0, 1/2, 0);
             obj.scaling.x = 1/width;
@@ -69,15 +61,15 @@ var Tank = function(xml_node,parent) {
             turret = obj;
             self.turret = turret;
         } else if (obj.getType()=="wheels") {
-	       if (obj.getSide()=="left") {
-		      obj.position = new BABYLON.Vector3(-width/2,0,0);
-	       } else {
-		      obj.position = new BABYLON.Vector3(width/2,0,0);
-	       }
-	       if (obj.getRadius() > maxWheelRadius)
-		      maxWheelRadius = obj.getRadius();
-	       obj.parent = wheels;
-	   }
+	    if (obj.getSide()=="left") {
+		obj.position = new BABYLON.Vector3(-width/2,0,0);
+	    } else {
+		obj.position = new BABYLON.Vector3(width/2,0,0);
+	    }
+	    if (obj.getRadius() > maxWheelRadius)
+		maxWheelRadius = obj.getRadius();
+	    obj.parent = wheels;
+	}
 	// TODO other children?
     }
     wheels.parent = self;
@@ -87,8 +79,9 @@ var Tank = function(xml_node,parent) {
     var position = self.position.clone();
     rotationQuaternion = BABYLON.Quaternion.Identity();
 
-    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, restitution: 0});
+    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
     self.showBoundingBox = true;
+
 
     // Define references to this object.
     window[id] = self;
@@ -164,37 +157,6 @@ function runAnimation(animation) {
 
       animation.setKeys(keys);
       enqueueAnimation(animation);
-    }
-
-    self.mov = function(dist) {
-      var xAnimation = new BABYLON.Animation("mov", "position.x", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-      var zAnimation = new BABYLON.Animation("mov", "position.z", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
-      console.log(angle);
-      var xKeys = [];
-      xKeys.push({
-        frame: 0,
-        value: self.position.x
-      });
-      xKeys.push({
-        frame: 30,
-        value: self.position.x + dist * Math.sin(angle)
-      });
-      var zKeys =[];
-      zKeys.push({
-        frame: 0,
-        value: self.position.z
-      });
-      zKeys.push({
-        frame: 30,
-        value: self.position.z + dist * Math.cos(angle)
-      });
-
-      xAnimation.setKeys(xKeys);
-      zAnimation.setKeys(zKeys);
-      self.animations.push(xAnimation);
-      self.animations.push(zAnimation);
-      var begin = scene.beginAnimation(self, 0, 30, true);
-      self.animations = [];
     }
 
     self.rotate = function(degrees) {

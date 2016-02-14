@@ -60,7 +60,7 @@ var createScene = function () {
     // Add the ground
     var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.75, restitution: .95 });
-    ground.isPickable = true;    
+    ground.isPickable = false;
     ground.receiveShadows = true;
 // Ground texture
     var gMat = new BABYLON.StandardMaterial("gMat", scene);
@@ -124,7 +124,6 @@ var createScene = function () {
     box6.position.z = 10;
     box6.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: .2})
     box6.setPhysicsState = true;
-    box6.isPickable = true;
     shadowGenerator.getShadowMap().renderList.push(box6);
 //    OBJECTS.push(box6);
 
