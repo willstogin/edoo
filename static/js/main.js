@@ -12,7 +12,7 @@ var createScene = function () {
     scene.clearColor = new BABYLON.Color3(0, 1, 0); // Background color
     
     // The box creation
-    var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 500.0, scene);
     skybox.isPickable = false;
 
     // The sky creation
@@ -58,7 +58,7 @@ var createScene = function () {
     scene.setGravity(new BABYLON.Vector3(0,-10,0));
     
     // Add the ground
-    var ground = BABYLON.Mesh.CreateGround("ground1", 100, 100, 2, scene);
+    var ground = BABYLON.Mesh.CreateGround("ground1", 250, 250, 2, scene);
     ground.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.75, restitution: .95 });
     ground.isPickable = false;
     ground.receiveShadows = true;
