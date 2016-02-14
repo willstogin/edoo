@@ -140,11 +140,12 @@ function runAnimation(animation) {
 	return id;
     }
 
+    self.stop = function(){
+      animationQueue = [];
+    }
 
     self.move = function(dist) {
       var animation = new BABYLON.Animation("mov", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-      console.log(angle);
-
       var keys = [];
       keys.push({
         frame: 0,
