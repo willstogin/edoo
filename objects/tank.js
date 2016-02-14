@@ -45,25 +45,36 @@ var Tank = function(xml_node,parent) {
     wheels.scaling.z = 1/length;
     wheels.isVisible = false;
     var maxWheelRadius = 0;
+    
+    var turret = BABYLON.Mesh.CreateBox(id+"_turret",0, scene);
+    turret.scaling.x = 1/width;
+    turret.scaling.y = 1/height;
+    turret.scaling.z = 1/length;
+    turret.isVisible = false;
+    
     for (var i=0; i<n.children.length; i++) {
-	var obj = createObjectForXmlNode(n.children[i]);
-	if (obj.getType()=="wheels") {
-	    if (obj.getSide()=="left") {
-		obj.position = new BABYLON.Vector3(-width/2,0,0);
-	    } else {
-		obj.position = new BABYLON.Vector3(width/2,0,0);
-	    }
-	    if (obj.getRadius() > maxWheelRadius)
-		maxWheelRadius = obj.getRadius();
-	    obj.parent = wheels;
-	}
+	   var obj = createObjectForXmlNode(n.children[i]);
+      
+        if (obj.getType() == "turret") {
+            obj.position = new BABYLON.Vector3(0, height, 0);
+            obj.parent = self;
+        } else if (obj.getType()=="wheels") {
+	       if (obj.getSide()=="left") {
+		      obj.position = new BABYLON.Vector3(-width/2,0,0);
+	       } else {
+		      obj.position = new BABYLON.Vector3(width/2,0,0);
+	       }
+	       if (obj.getRadius() > maxWheelRadius)
+		      maxWheelRadius = obj.getRadius();
+	       obj.parent = wheels;
+	   }
 	// TODO other children?
     }
     wheels.parent = self;
 
     y = maxWheelRadius;
     self.position = new BABYLON.Vector3(x,y,z);
-//    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 0});
+    self.setPhysicsState({ impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 1, restitution: 1});
 
     // Define references to this object.
     window[id] = self;
