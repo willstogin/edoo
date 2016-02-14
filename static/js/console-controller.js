@@ -33,4 +33,3 @@ var controller = container.console({
 function print(text) {
     controller.report(text,"jquery-console-message-type");
 }
-console.log(controller);
