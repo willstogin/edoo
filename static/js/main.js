@@ -13,6 +13,7 @@ var createScene = function () {
     
     // The box creation
     var skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene);
+    skybox.isPickable = false;
 
     // The sky creation
     var skyMat = new BABYLON.StandardMaterial("skyMat", scene);
@@ -67,7 +68,8 @@ var createScene = function () {
     gtexture.uScale = 20;
     gtexture.vScale = 20;
     gMat.diffuseTexture = gtexture;    
-    ground.material = gMat;
+    ground.material = gMat
+    ground.isPickable = false;
     
     // Add all the boxes
     
