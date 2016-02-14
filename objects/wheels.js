@@ -41,7 +41,8 @@ var Wheels = function(xml_node,parent) {
 	} else if (side=="right") {
 	    wheel.position = new BABYLON.Vector3(width/2,0,radius*2*i-radius*(count-1));
 	}
-	wheel.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:1, restitution: 0});
+	wheel.setPhysicsState({ imposter: BABYLON.PhysicsEngine.BoxImposter, mass:0, restitution: 0});
+	wheel.showBoundingBox = true;
 	wheel.parent = self;
 //	wheels.push(wheel);
     }
