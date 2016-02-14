@@ -7,6 +7,7 @@ var Tank = function(xml_node,parent) {
 /////////////////
 
     // Attributes possibly from xml
+    var turret;
     var id;
     var length = 3;
     var width = 2;
@@ -56,7 +57,9 @@ var Tank = function(xml_node,parent) {
             obj.scaling.x = 1/width;
             obj.scaling.y = 1/height;
             obj.scaling.z = 1/length;
-            obj.parent = self;
+            obj.parent = self;  
+            turret = obj;
+            self.turret = turret;
         } else if (obj.getType()=="wheels") {
 	    if (obj.getSide()=="left") {
 		obj.position = new BABYLON.Vector3(-width/2,0,0);
@@ -120,6 +123,7 @@ function runAnimation(animation) {
 //////////////////////
 // Public Functions //
 //////////////////////
+    
 
     self.getType = function() {
 	return "tank";

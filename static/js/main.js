@@ -68,7 +68,8 @@ var createScene = function () {
     gtexture.uScale = 20;
     gtexture.vScale = 20;
     gMat.diffuseTexture = gtexture;    
-    ground.material = gMat;
+    ground.material = gMat
+    ground.isPickable = false;
     
     // Add all the boxes
     
