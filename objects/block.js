@@ -71,5 +71,9 @@ var Block = function(xml_node,parent) {
 	self.dispose();
     }
 
+    self.getId = function() {
+	return id;
+    }
+
     return self;
 }
